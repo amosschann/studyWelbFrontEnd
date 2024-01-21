@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { SafeAreaView, View, Alert, TextInput, ImageBackground, KeyboardAvoidingView} from 'react-native';
+import { SafeAreaView, View, Alert, TextInput, TouchableOpacity, ImageBackground, KeyboardAvoidingView, Text} from 'react-native';
 import styles from '../components/Style';
 import * as Haptics from 'expo-haptics';
+import { SubmitButton } from '../components/Buttons';
 
 export default function SignUpScreen ({ navigation }){
     const [profileName, setProfileName] = useState('')
@@ -81,8 +82,87 @@ export default function SignUpScreen ({ navigation }){
                 style={styles.container}
                 behavior="position"
             >
-                <View style={[styles.mainView, styles.flexColumn]}>
-                    
+                <View style={[styles.mainView, styles.columnFlex]}>
+
+                    {/*Top half  */}
+                    <View style={[styles.flex2, styles.backgroundBlue]}>
+                        <View style={[styles.flex3]}>
+                            <View style={[styles.flex1]}/>
+                            <ImageBackground 
+                                source={require('../assets/icon-studywelb1.png')} 
+                                style={[styles.flex5]} 
+                                imageStyle= {[styles.objectFitCover, styles.objectFitContain]}
+                            />
+                        </View>
+                        <View style={[styles.flex1, styles.justifyVerticalCenter, styles.justifyHorizontalCenter]}>
+                            <Text style={[styles.text20, styles.fontBold, styles.colourWhite]}>STUDY WELB</Text>
+                        </View>
+                    </View>
+
+                    {/* bottom half */}
+                    <View style={[styles.flex5]}>
+
+                        <View style={[styles.flex3]}/>
+                        <View style={[styles.flex2, styles.rowFlex]}>
+                            <View style={[styles.flex1]}/>
+                            <TextInput
+                                style={[styles.flex8, styles.borderRadius20Black, styles.justifyHorizontalCenter, styles.justifyVerticalCenter, styles.textAlignCenter, styles.text15]}
+                                placeholder="Profile Name"
+                                placeholderTextColor="#000000"
+                                maxLength={16}
+                                onChangeText={(profileName) => setProfileName(profileName)}
+                            /> 
+                            <View style={[styles.flex1]}/>
+                        </View>
+
+                        <View style={[styles.flex1]}/>
+                        <View style={[styles.flex2, styles.rowFlex]}>
+                            <View style={[styles.flex1]}/>
+                            <TextInput
+                                style={[styles.flex8, styles.borderRadius20Black, styles.justifyHorizontalCenter, styles.justifyVerticalCenter, styles.textAlignCenter, styles.text15]}
+                                placeholder="Email"
+                                inputMode='email'
+                                placeholderTextColor="#000000"
+                                onChangeText={(email) => setEmail(email)}
+                            /> 
+                            <View style={[styles.flex1]}/>
+                        </View>
+
+                        <View style={[styles.flex1]}/>
+                        <View style={[styles.flex2, styles.rowFlex]}>
+                            <View style={[styles.flex1]}/>
+                            <TextInput
+                                style={[styles.flex8, styles.borderRadius20Black, styles.justifyHorizontalCenter, styles.justifyVerticalCenter, styles.textAlignCenter, styles.text15]}
+                                placeholder="Password"
+                                placeholderTextColor="#003f5c"
+                                secureTextEntry={true}
+                                maxLength={16}
+                                onChangeText={(password) => setPassword(password)}
+                            />
+                            <View style={[styles.flex1]}/>
+                        </View>
+
+                        <View style={[styles.flex1]}/>
+                        <View style={[styles.flex2, styles.rowFlex]}>
+                            <View style={[styles.flex1]}/>
+                            <TextInput
+                                style={[styles.flex8, styles.borderRadius20Black, styles.justifyHorizontalCenter, styles.justifyVerticalCenter, styles.textAlignCenter, styles.text15]}
+                                placeholder="Confirm Password"
+                                placeholderTextColor="#003f5c"
+                                secureTextEntry={true}
+                                maxLength={16}
+                                onChangeText={(password) => setConfirmPassword(password)}
+                            />
+                            <View style={[styles.flex1]}/>
+                        </View>
+
+                        <View style={[styles.flex1]}/>
+                        <View style={[styles.flex2]}>
+                            <SubmitButton props={{text: "Submit", onPress: submitSignUp}}/>
+                        </View>
+
+                        <View style={[styles.flex3]}/>
+                    </View>
                 </View>
             </KeyboardAvoidingView>
         </SafeAreaView>

@@ -67,6 +67,9 @@ const styles = StyleSheet.create({
     backgroundDarkBlue: {
       backgroundColor: '#3E4756'
     },
+    backgroundLightBlue: {
+      backgroundColor: '#D6E2F4'
+    },
     //colur
     colourWhite: {
       color: 'white'
@@ -112,6 +115,17 @@ const styles = StyleSheet.create({
       borderRadius: 20,
       borderColor: "#000000",
       borderWidth: 1,
+    },
+    borderBlack: {
+      overflow: 'hidden',
+      borderColor: "#000000",
+      borderWidth: 1,
+    },
+    borderBlacknoBottom: {
+      overflow: 'hidden',
+      borderColor: "#000000",
+      borderWidth: 1,
+      borderBottomColor: 'transparent',
     },
     //image object fit
     objectFitContain: {

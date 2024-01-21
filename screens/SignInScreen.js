@@ -83,6 +83,7 @@ export default function SignInScreen ({ navigation: { navigate }, props }){
                 behavior="position"
             >
                 <View style={[styles.mainView, styles.columnFlex]}>
+
                     {/*Top half  */}
                     <View style={[styles.flex3, styles.backgroundBlue]}>
                         <View style={[styles.flex3]}>
@@ -97,6 +98,7 @@ export default function SignInScreen ({ navigation: { navigate }, props }){
                             <Text style={[styles.text20, styles.fontBold, styles.colourWhite]}>STUDY WELB</Text>
                         </View>
                     </View>
+                    
                     {/* bottom half */}
                     <View style={[styles.flex4]}>
 
