@@ -70,6 +70,9 @@ const styles = StyleSheet.create({
     backgroundLightBlue: {
       backgroundColor: '#D6E2F4'
     },
+    backgroundWhite: {
+      backgroundColor: '#FFFFFF'
+    },
     //colur
     colourWhite: {
       color: 'white'
@@ -96,6 +99,9 @@ const styles = StyleSheet.create({
     justifyHorizontalEnd: {
       alignItems: 'flex-end'
     },
+    positionAbsolute: {
+      position: 'absolute'
+    },
     //text
     text20: {
       fontSize: 20
@@ -105,6 +111,9 @@ const styles = StyleSheet.create({
     },
     textAlignCenter: {
       textAlign: 'center'
+    },
+    textAlignRight: {
+      textAlign: 'right'
     },
     fontBold: {
       fontWeight: 'bold'
