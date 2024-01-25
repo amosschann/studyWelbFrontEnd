@@ -22,7 +22,9 @@ export default function SettingsScreen({ navigation: { navigate }, props }){
     }, []);
 
     useEffect((() => {
-        getUserProfileDetails();
+        if (accessToken !== '') {
+            getUserProfileDetails();
+        }
     }),[accessToken])
 
     function getUserProfileDetails() {

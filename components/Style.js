@@ -60,6 +60,10 @@ const styles = StyleSheet.create({
     height: {
     height: height
     },
+    //padding
+    paddingLeft10: {
+      paddingLeft: 10
+    },
     //backgroundcolour 
     backgroundBlue: {
       backgroundColor: '#4677B0'
@@ -125,6 +129,12 @@ const styles = StyleSheet.create({
       borderColor: "#000000",
       borderWidth: 1,
     },
+    borderRadius10BlackThick: {
+      overflow: 'hidden',
+      borderRadius: 10,
+      borderColor: "#000000",
+      borderWidth: 2,
+    },
     borderBlack: {
       overflow: 'hidden',
       borderColor: "#000000",
@@ -135,6 +145,12 @@ const styles = StyleSheet.create({
       borderColor: "#000000",
       borderWidth: 1,
       borderBottomColor: 'transparent',
+    },
+    borderBlacknoTop: {
+      overflow: 'hidden',
+      borderColor: "#000000",
+      borderWidth: 1,
+      borderTopColor: 'transparent'
     },
     //image object fit
     objectFitContain: {
