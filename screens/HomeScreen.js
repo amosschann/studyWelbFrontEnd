@@ -16,8 +16,44 @@ export default function HomeScreen({ navigation: { navigate }, props }){
     const [markedDates, setMarkedDates] = useState({});
     const [fetchTaskIds, setFetchTaskIds] = useState(false);
     const [dateToId, setDateToId] = useState({});
-      
+    const [tasks, setTasks] = useState([]);
+    const [journalAvailable, setJournalAvailable] = useState(false);
 
+    /* Overview 
+    start:
+    get accesstoken 
+    fetch taskdays 
+    mark currently selected day
+    mark days with tasks 
+    fetch selected day tasks
+    fetch selected day journals - count
+
+    onDayChange:
+    mark currently selected day
+    fetch task with taskday id for the day (if none - means nothing on the day - dont fetch)
+    fetch selected day journals - count
+
+    onMonthChange:
+    change selected day to first of the month
+    reset all marked dates
+    mark currently selected day
+    fetch taskdays 
+    mark days with tasks 
+    fetch task for selected day
+    fetch selected day journals - count
+
+    for marked days to not clash with selected day:
+    reset all marked days and check if it is on selected day
+    iterate with markedDatesArray
+
+    fetches:
+    - taskdays GET request
+    - tasks GET request
+    - journal count GET request
+
+    */
+      
+    //access token
     useEffect(() => {
         //initial load from login
         getAccessToken().then(accessToken => {
@@ -25,13 +61,14 @@ export default function HomeScreen({ navigation: { navigate }, props }){
         })
     }, []);
 
-
+    //initial fetch after access token
     useEffect(() => {
         if (accessToken !== '') {
             fetchCurrentMonthTasksIds();
         }
     }, [accessToken])
 
+    //reset and fetch taskids for the month on month change
     useEffect(() => {
         if (fetchTaskIds) {
             //reset marked dates and ids
@@ -45,15 +82,31 @@ export default function HomeScreen({ navigation: { navigate }, props }){
         }
     }, [selectedDate, fetchTaskIds])
 
+    //fetch tasks and (journal count) on date selection
     useEffect((() => {
         //mark selected Date for normal select
         markSelectedDate();
-        let dateId = dateToId[selectedDate]
+        //reset tasks and journal available
+        setTasks([]);
+        setJournalAvailable(false);
+        let taskDaysId = dateToId[selectedDate]
         //means there are entries to fetch
-        if (dateId !== undefined) {
-            console.log(dateId)
+        if (taskDaysId !== undefined) {
+            fetchSelectedDayTasks(taskDaysId);
+            fetchSelectedDayJornal(taskDaysId);
         }
     }), [selectedDate])
+
+    //to fetch tasks and journals after fetchCurrentMonthTasksIds is completed and dateToId is completed
+    useEffect(() => {
+        let taskDaysId = dateToId[selectedDate]
+        //means there are entries to fetch
+        if (taskDaysId !== undefined) {
+            fetchSelectedDayTasks(taskDaysId);
+            fetchSelectedDayJornal(taskDaysId);
+        }
+    }, [dateToId])
+
 
     /* Date Formatting */
     const inputDate = new Date(selectedDate);
@@ -91,7 +144,74 @@ export default function HomeScreen({ navigation: { navigate }, props }){
         }
         searchParams = new URLSearchParams(data).toString();
 
-        let url = process.env.EXPO_PUBLIC_API_URL + 'api/tasks/get-user-taskdays?' + searchParams; 
+        let url = process.env.EXPO_PUBLIC_API_URL + 'api/taskDays/get-user-taskdays?' + searchParams; 
+        fetch(url, {
+            method: 'GET',
+            mode: 'cors',
+            cache: 'no-cache',
+            credentials: 'same-origin',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'authorization' : accessToken
+            },
+            redirect: 'follow',
+            referrer: 'client',
+        })
+        .then((response) => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                Alert.alert('unkown error occurred');
+            }
+        })
+        .then((jsonResponse) => {
+            if (jsonResponse !== undefined) {
+                console.log(jsonResponse);
+        
+                //placeholders for state updates
+                let newMarkedDates = {};
+                let newMarkedDatesArray = [];
+                let newDateToId = {};
+        
+                //iterate through results to extract all the dates to taskdays id
+                //mark days with tasks / journal entries (backend queries taskdays that have at least 1 entry in either tasks or journals table for the date)
+                for (const task of jsonResponse.result) {             
+                    let taskDate = localiseAndFormatDBDate(task.date);
+                    let taskId = task.id;
+                    const isCurrentDateSelected = taskDate === selectedDate;
+        
+                    // Update placeholders
+                    newMarkedDates = {
+                        ...newMarkedDates,
+                        [taskDate]: { marked: true, selected: isCurrentDateSelected },
+                    };
+                    newMarkedDatesArray = [...newMarkedDatesArray, taskDate];
+                    newDateToId = {
+                        ...newDateToId,
+                        [taskDate]: taskId,
+                    };
+                }
+        
+                //update states after the loop
+                setMarkedDates((prevMarkedDates) => ({ ...prevMarkedDates, ...newMarkedDates }));
+                setMarkedDatesArray((prevMarkedDates) => [...prevMarkedDates, ...newMarkedDatesArray]);
+                setDateToId((prevDateToId) => ({ ...prevDateToId, ...newDateToId }));
+            }
+        })
+        .catch((err) => {
+            console.error('Fetch error:', err);
+        });
+    }
+
+    //fetch all of the days that have taskday table row and their ids
+    function fetchSelectedDayTasks(taskDaysId) {
+        const data = {
+            taskDaysId: taskDaysId
+        }
+        searchParams = new URLSearchParams(data).toString();
+
+        let url = process.env.EXPO_PUBLIC_API_URL + 'api/tasks/get-tasks?' + searchParams; 
         fetch(url, {
             method: 'GET',
             mode: 'cors',
@@ -115,43 +235,61 @@ export default function HomeScreen({ navigation: { navigate }, props }){
         .then(async (jsonResponse) => {
             if (jsonResponse !== undefined) {
                 console.log(jsonResponse)
-                //iterate through results to extract all the dates to taskdays id
-                //mark days with tasks / journal entries (backend queires taskdays that have at least 1 entry in either tasks or journals table for the date)
-                for (const task of jsonResponse.result) {             
-                    let taskDate = localiseAndFormatDBDate( task.date);
-                    let taskId = task.id;
-                    const isCurrentDateSelected = taskDate === selectedDate;
-
-                    const newEntry = {
-                        [taskDate]: { marked: true , selected: isCurrentDateSelected},
-                    };
-                    //for direct direct placement in marked dates
-                    setMarkedDates((prevMarkedDates) => {
-                        return {
-                            ...prevMarkedDates,
-                            ...newEntry,
-                        };
-                    });
-                    //for onSelect iteration 
-                    setMarkedDatesArray((prevMarkedDates) => 
-                        [...prevMarkedDates,
-                            taskDate,]
-                    );
-                    const dateAndId = {[taskDate]: taskId}
-                    //for api call to that day
-                    setDateToId((prevDateToId) => {
-                        return {
-                            ...prevDateToId,
-                            ...dateAndId,
-                        };
-                    });
-                }
+                setTasks(jsonResponse.result)
+            
             }
         })
         .catch((err) => {
             console.error('Fetch error:', err);
         });
     }
+
+    //fetch and check if selected day has journal entry
+    function fetchSelectedDayJornal(taskDaysId) {
+        const data = {
+            taskDaysId: taskDaysId
+        }
+        searchParams = new URLSearchParams(data).toString();
+
+        let url = process.env.EXPO_PUBLIC_API_URL + 'api/journals/get-journal-available?' + searchParams; 
+        fetch(url, {
+            method: 'GET',
+            mode: 'cors',
+            cache: 'no-cache',
+            credentials: 'same-origin',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'authorization' : accessToken
+            },
+            redirect: 'follow',
+            referrer: 'client',
+        })
+        .then((response) => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                Alert.alert('unkown error occurred');
+            }
+        })
+        .then(async (jsonResponse) => {
+            if (jsonResponse !== undefined) {
+                console.log(jsonResponse.result[0].journalCount)
+                if (jsonResponse.result[0].journalCount > 0) {
+                    setJournalAvailable(true);
+                } else {
+                    setJournalAvailable(false);
+                }
+
+            
+            }
+        })
+        .catch((err) => {
+            console.error('Fetch error:', err);
+        });
+    }
+
+
 
 
 
@@ -169,19 +307,24 @@ export default function HomeScreen({ navigation: { navigate }, props }){
                             setSelectedDate(selectedDate);
                             //reset marked dates
                             setMarkedDates({})
-                            // reset and update the curret list of marked days
+                            //placeholders for state updates
+                            let newMarkedDates = {};    
+                            //reset and update the current list of marked days
                             for (const taskDate of markedDatesArray) {
                                 const isCurrentDateSelected = taskDate === selectedDate;
                                 const newEntry = {
-                                    [taskDate]: { marked: true , selected: isCurrentDateSelected},
+                                    [taskDate]: { marked: true, selected: isCurrentDateSelected },
                                 };
-                                setMarkedDates((prevMarkedDates) => {
-                                    return {
-                                        ...prevMarkedDates,
-                                        ...newEntry,
-                                    };
-                                });
+
+                                // Create a placeholder for state update
+                                newMarkedDates = {
+                                    ...newMarkedDates,
+                                    ...newEntry,
+                                };
                             }
+                            //update the state after the loop
+                            setMarkedDates((prevMarkedDates) => ({ ...prevMarkedDates, ...newMarkedDates }));
+
                         }}
                         //on switching between months
                         onMonthChange={month => {
@@ -214,13 +357,16 @@ export default function HomeScreen({ navigation: { navigate }, props }){
                     <View style={[styles.flex1, styles.justifyHorizontalCenter]}>
                         <Text style={[styles.text15, styles.fontBold]}>{formattedDate}</Text>
                     </View>
-                    <TouchableOpacity style={[styles.positionAbsolute, { right: 10 }]}>
+                    <TouchableOpacity 
+                        style={[styles.positionAbsolute, { right: 10 }]}
+                        onPress= {() => navigate('DayTasksScreen', { selectedDate: selectedDate })}
+                    >
                         <Text style={[styles.text15]}>View All →</Text>
                     </TouchableOpacity>
                 </View>
                     <View style={[styles.flex6, styles.backgroundWhite]}>
                     <ScrollView style={[styles.flex1]}>
-                        <ActivityRowStatic
+                        {/* <ActivityRowStatic
                                     props={{
                                     onPress: () => console.log('hello'),
                                     activity: 'testt',
@@ -241,11 +387,44 @@ export default function HomeScreen({ navigation: { navigate }, props }){
                                     activity: 'testt',
                                     time: 'test time'
                                 }}
-                        />
+                        /> */}
+                        {
+                            tasks.length > 0 ?
+                            tasks.map((resp, index) => (
+                                <ActivityRowStatic
+                                    key={'activityrow' + index}
+                                    props={{
+                                            onPress: () => console.log('hello'),
+                                            activity: resp.task_title,
+                                            time: resp.start_time.substring(0, resp.start_time.length-3) 
+                                            + " - " 
+                                            + resp.end_time.substring(0, resp.start_time.length-3)
+                                        }}
+                                    />
+                            )) : 
+                            <ActivityRowStatic
+                                    props={{
+                                    onPress: () => console.log('hello'),
+                                    activity: 'no tasks for the day',
+                                    time: 'add a task'
+                                }}
+                            />
+                        }
                     </ScrollView>
                     </View>
-                    <View style={[styles.flex1]}>
-                    
+                    <View style={[styles.flex1, styles.rowFlex]}>
+                        <View style={[styles.flex1, styles.justifyVerticalCenter]}>
+                            <Text style={[styles.text15, styles.textAlignCenter]}>{'tasks: ' + tasks.length}</Text>
+                        </View>
+                        <View style={[styles.flex1, styles.justifyVerticalCenter]}>
+                            {
+                                journalAvailable?
+                                <Text style={[styles.text15, styles.textAlignCenter]}>{'journal: written'}</Text> :
+                                <Text style={[styles.text15, styles.textAlignCenter]}>{'journal: no entry'}</Text>
+                            } 
+                            
+                        </View>
+
                     </View>
                 </View>
             </View>

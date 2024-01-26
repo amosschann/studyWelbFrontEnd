@@ -80,17 +80,17 @@ export default function SettingsScreen({ navigation: { navigate }, props }){
                 {/* bottom half */}
                 <View style={[styles.flex4]}>
                     <TouchableOpacity style={[styles.flex1]}>
-                        <View style={[styles.flex1, styles.borderBlacknoBottom, styles.justifyHorizontalCenter, styles.justifyVerticalCenter]}>
+                        <View style={[styles.flex1, styles.borderGreynoBottom, styles.justifyHorizontalCenter, styles.justifyVerticalCenter]}>
                             <Text style={[styles.text15, styles.fontBold]}>Update Profile Info</Text>
                         </View>
                     </TouchableOpacity>
                     <TouchableOpacity style={[styles.flex1]}>
-                        <View style={[styles.flex1, styles.borderBlacknoBottom, styles.justifyHorizontalCenter, styles.justifyVerticalCenter]}>
+                        <View style={[styles.flex1, styles.borderGreynoBottom, styles.justifyHorizontalCenter, styles.justifyVerticalCenter]}>
                             <Text style={[styles.text15, styles.fontBold]}>Update Profile Photo</Text>
                         </View>
                     </TouchableOpacity>
                     <TouchableOpacity style={[styles.flex1]}>
-                        <View style={[styles.flex1, styles.borderBlacknoBottom, styles.justifyHorizontalCenter, styles.justifyVerticalCenter]}>
+                        <View style={[styles.flex1, styles.borderGreynoBottom, styles.justifyHorizontalCenter, styles.justifyVerticalCenter]}>
                             <Text style={[styles.text15, styles.fontBold]}>More Settings</Text>
                         </View>
                     </TouchableOpacity>
@@ -106,7 +106,7 @@ export default function SettingsScreen({ navigation: { navigate }, props }){
                             signOut();
 
                     }}>
-                        <View style={[styles.flex1, styles.borderBlack, styles.justifyHorizontalCenter, styles.justifyVerticalCenter]}>
+                        <View style={[styles.flex1, styles.borderGrey, styles.justifyHorizontalCenter, styles.justifyVerticalCenter]}>
                             <Text style={[styles.text15, styles.fontBold]}>Sign Out</Text>
                         </View>
                     </TouchableOpacity>

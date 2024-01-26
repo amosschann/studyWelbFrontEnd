@@ -18,7 +18,7 @@ onPress - onPress action for whole row
 */
 export function ActivityRowStatic ({props}) {
     return (
-        <TouchableOpacity style={[styles.flex1, styles.rowFlex, styles.borderBlack, {height: height/ 8}]}>
+        <TouchableOpacity style={[styles.flex1, styles.rowFlex, styles.borderLightGrey, {height: height/ 8}]}>
             {/* Activity */}
             <View style={[styles.flex1]}/>
             <View style={[styles.flex5 ,styles.justifyHorizontalStart, styles.justifyVerticalCenter]}>
@@ -43,9 +43,9 @@ onPressCheck - onPress action for left side (button)
 */
 export function ActivityRowNotChecked ({props}) {
     return (
-            <View style={[styles.flex, styles.rowFlex, styles.borderBlack, {height: height/ 8}]}>
+            <View style={[styles.flex1, styles.rowFlex, styles.borderLightGrey, {height: height/ 8}]}>
                 <TouchableOpacity 
-                    style={[styles.flex1, styles.justifyHorizontalCenter, styles.justifyVerticalCenter]}
+                    style={[styles.flex2, styles.justifyHorizontalCenter, styles.justifyVerticalCenter]}
                     onPress={props.onPressCheck}
                 >
                     <CheckBox/>
@@ -75,8 +75,8 @@ onPress - onPress action for right side row
 export function ActivityRowChecked ({props}) {
     return (
         <TouchableOpacity style={[styles.flex1, {height: height/ 8}]} onPress={props.onPress}>
-            <View style={[styles.flex1, styles.rowFlex, styles.borderBlack]}>
-                <View style={[styles.flex1, styles.justifyHorizontalCenter, styles.justifyVerticalCenter]}>
+            <View style={[styles.flex1, styles.rowFlex, styles.borderLightGrey]}>
+                <View style={[styles.flex2, styles.justifyHorizontalCenter, styles.justifyVerticalCenter]}>
                     <CheckBox/>
                 </View>
                 {/* Activity */}
@@ -97,13 +97,13 @@ export function ActivityRowChecked ({props}) {
 export function CheckBox() {
     return(
         <View style={[styles.flex1, styles.rowFlex]}>
-            <View style={[styles.flex1]}/>
+            <View style={[styles.flex4]}/>
             <View style={[styles.flex5, styles.columnFlex]}>
-                <View style={[styles.flex3]}/>
-                <View style={[styles.flex2, styles.borderRadius10BlackThick]}/>
-                <View style={[styles.flex3]}/>
+                <View style={[styles.flex5]}/>
+                <View style={[styles.flex3, styles.borderRadius10GreyThick]}/>
+                <View style={[styles.flex5]}/>
             </View>
-            <View style={[styles.flex1]}/>
+            <View style={[styles.flex4]}/>
         </View>
     )
 }

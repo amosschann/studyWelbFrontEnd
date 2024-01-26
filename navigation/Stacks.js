@@ -4,6 +4,7 @@ import SignInScreen from '../screens/SignInScreen';
 import SignUpScreen from '../screens/SignUpScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import WellnessScreen from '../screens/WellnessScreen';
+import DayTasksScreen from '../screens/DayTasksScreen';
 
 
 //**Main Stacks with Navigator */
@@ -48,8 +49,7 @@ export function HomeStackScreen() {
             title: "Home"
           }}
         />
-        {/* {travelStackScreen()}
-        {itineraryStackScreen()} */}
+        {dayTasksStackScreen()}
 
         </HomeStack.Navigator>
   );
@@ -91,3 +91,15 @@ export function SettingsStackScreen() {
 
 
 //**Reusable stacks */
+export function dayTasksStackScreen() {
+  const dayTasksStack = createNativeStackNavigator();
+  return(
+        <dayTasksStack.Screen 
+          name="DayTasksScreen" 
+          component={DayTasksScreen}
+          options={{ 
+            title: 'Day Tasks' 
+          }}
+        />
+  );
+}

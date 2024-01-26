@@ -64,6 +64,14 @@ const styles = StyleSheet.create({
     paddingLeft10: {
       paddingLeft: 10
     },
+    paddingTopBottom20: {
+      paddingTop: 20,
+      paddingBottom: 20
+    },
+    paddingTop40Bottom20: {
+      paddingTop: 40,
+      paddingBottom: 20
+    },
     //backgroundcolour 
     backgroundBlue: {
       backgroundColor: '#4677B0'
@@ -129,10 +137,10 @@ const styles = StyleSheet.create({
       borderColor: "#000000",
       borderWidth: 1,
     },
-    borderRadius10BlackThick: {
+    borderRadius10GreyThick: {
       overflow: 'hidden',
       borderRadius: 10,
-      borderColor: "#000000",
+      borderColor: "#808080",
       borderWidth: 2,
     },
     borderBlack: {
@@ -140,15 +148,25 @@ const styles = StyleSheet.create({
       borderColor: "#000000",
       borderWidth: 1,
     },
-    borderBlacknoBottom: {
+    borderGrey: {
       overflow: 'hidden',
-      borderColor: "#000000",
+      borderColor: "#808080",
+      borderWidth: 1,
+    },
+    borderLightGrey: {
+      overflow: 'hidden',
+      borderColor: "#d3d3d3",
+      borderWidth: 1,
+    },
+    borderGreynoBottom: {
+      overflow: 'hidden',
+      borderColor: "#808080",
       borderWidth: 1,
       borderBottomColor: 'transparent',
     },
-    borderBlacknoTop: {
+    borderGreynoTop: {
       overflow: 'hidden',
-      borderColor: "#000000",
+      borderColor: "#808080",
       borderWidth: 1,
       borderTopColor: 'transparent'
     },
