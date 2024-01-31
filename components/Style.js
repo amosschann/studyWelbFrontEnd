@@ -64,6 +64,14 @@ const styles = StyleSheet.create({
     paddingLeft10: {
       paddingLeft: 10
     },
+    paddingLeftRight5: {
+      paddingLeft: 5,
+      paddingRight: 5
+    },
+    paddingLeftRight10: {
+      paddingLeft: 10,
+      paddingRight: 10
+    },
     paddingTopBottom20: {
       paddingTop: 20,
       paddingBottom: 20
@@ -71,6 +79,16 @@ const styles = StyleSheet.create({
     paddingTop40Bottom20: {
       paddingTop: 40,
       paddingBottom: 20
+    },
+    //margin
+    marginTop2: {
+      marginTop: 2
+    },
+    marginTop5: {
+      marginTop: 5
+    },
+    marginTop10: {
+      marginTop: 10
     },
     //backgroundcolour 
     backgroundBlue: {
@@ -84,6 +102,12 @@ const styles = StyleSheet.create({
     },
     backgroundWhite: {
       backgroundColor: '#FFFFFF'
+    },
+    backgroundLightGrey: {
+      backgroundColor: '#e0e0e0'
+    },
+    backgroundVLightBlue: {
+      backgroundColor: '#f3fbfb'
     },
     //colur
     colourWhite: {
@@ -126,6 +150,12 @@ const styles = StyleSheet.create({
     },
     textAlignRight: {
       textAlign: 'right'
+    },
+    textAlignLeft: {
+      textAlign: 'left'
+    },
+    textAlignVerticleTop: {
+      textAlignVertical: 'top'
     },
     fontBold: {
       fontWeight: 'bold'

@@ -5,6 +5,7 @@ import SignUpScreen from '../screens/SignUpScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import WellnessScreen from '../screens/WellnessScreen';
 import DayTasksScreen from '../screens/DayTasksScreen';
+import AddTasksScreen from '../screens/AddTasksScreen';
 
 
 //**Main Stacks with Navigator */
@@ -50,6 +51,7 @@ export function HomeStackScreen() {
           }}
         />
         {dayTasksStackScreen()}
+        {addTasksStackScreen()}
 
         </HomeStack.Navigator>
   );
@@ -103,3 +105,17 @@ export function dayTasksStackScreen() {
         />
   );
 }
+
+export function addTasksStackScreen() {
+  const addTasksStack = createNativeStackNavigator();
+  return(
+        <addTasksStack.Screen 
+          name="AddTasksScreen" 
+          component={AddTasksScreen}
+          options={{ 
+            title: 'Add Tasks' 
+          }}
+        />
+  );
+}
+

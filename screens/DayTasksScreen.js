@@ -2,14 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { Alert, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import styles from '../components/Style';
 import { getAccessToken } from '../helpers/AccessTokenHelper';
-import {Calendar, LocaleConfig} from 'react-native-calendars';
-import { Dimensions } from 'react-native';
 import { ActivityRowChecked, ActivityRowNotChecked, ActivityRowStatic } from '../components/ActivityRow';
-import { localiseAndFormatDBDate } from '../helpers/DateTimeHelper';
-const { height } = Dimensions.get('screen');
+import { useNavigationState } from '@react-navigation/native';
 
 
 export default function DayTasksScreen({ navigation: { navigate }, route }){
+    const pageIndex = useNavigationState(state => state.index);
     const [accessToken, setAccessToken] = useState('');
     const [toDoTasks, setToDoTasks] = useState([]);
     const [completedTasks, setCompletedTasks] = useState([]);
@@ -31,6 +29,16 @@ export default function DayTasksScreen({ navigation: { navigate }, route }){
             fetchCompletedTasks();
         }
     }, [accessToken])
+
+    useEffect(() => { 
+        //reload data once back from add task / daily journal
+        if (accessToken !== '') {
+            if (pageIndex === 1) {
+                fetchToDoTasks();
+                fetchCompletedTasks();
+            }
+        }
+    }, [pageIndex])
 
 
     /* Date Formatting */
@@ -129,9 +137,9 @@ export default function DayTasksScreen({ navigation: { navigate }, route }){
 
                 {/*Top half  */}
                 <View style={[styles.flex3]}>
-                    <View style={[styles.flex2, styles.backgroundLightBlue, styles.justifyVerticalCenter]}>
+                    <View style={[styles.flex2, styles.backgroundBlue, styles.justifyVerticalCenter]}>
                         <TouchableOpacity style={[styles.positionAbsolute, { right: 10 }]}>
-                            <Text style={[styles.text15, styles.fontBold]}>Daily Journal →</Text>
+                            <Text style={[styles.text15, styles.fontBold, styles.colourWhite]}>Daily Journal →</Text>
                         </TouchableOpacity>
                     </View>
                     <View style={[styles.flex5]}>
@@ -140,13 +148,16 @@ export default function DayTasksScreen({ navigation: { navigate }, route }){
                 </View>
 
                 {/* bottom half */}
-                <View style={[styles.flex7, styles.backgroundLightBlue]}>
+                <View style={[styles.flex7, styles.backgroundBlue]}>
                 <View style={[styles.flex1, styles.justifyVerticalCenter, styles.rowFlex, styles.justifyHorizontalCenter]}>
                     <View style={[styles.flex1, styles.justifyHorizontalCenter]}>
-                        <Text style={[styles.text20, styles.fontBold]}>{formattedDate}</Text>
+                        <Text style={[styles.text20, styles.fontBold, styles.colourWhite]}>{formattedDate}</Text>
                     </View>
-                    <TouchableOpacity style={[styles.positionAbsolute, { right: 10 }]}>
-                        <Text style={[styles.text15]}>Add Task +</Text>
+                    <TouchableOpacity 
+                        style={[styles.positionAbsolute, { right: 10 }]} 
+                        onPress= {() => navigate('AddTasksScreen', { selectedDate: route.params.selectedDate })}
+                    >
+                        <Text style={[styles.text15, styles.colourWhite]}>Add Task +</Text>
                     </TouchableOpacity>
                 </View>
                     <View style={[styles.flex6, styles.backgroundWhite]}>
@@ -169,11 +180,12 @@ export default function DayTasksScreen({ navigation: { navigate }, route }){
                                     ))}
                                     <Text  style={[styles.text20, styles.textAlignCenter, styles.fontBold, styles.paddingTop40Bottom20]} > Completed </Text>
                                     {completedTasks.map((resp, index) => (
-                                        <ActivityRowNotChecked
+                                        <ActivityRowChecked
                                             key={'activityrow' + index}
                                             props={{
                                                 onPress: () => console.log('hello'),
                                                 activity: resp.task_title,
+                                                mood: resp.mood,
                                                 time: resp.start_time.substring(0, resp.start_time.length - 3) +
                                                     " - " +
                                                     resp.end_time.substring(0, resp.start_time.length - 3)

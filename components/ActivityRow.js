@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View, Dimensions, TouchableOpacity } from 'react-native';
 import styles from './Style';
-const { height } = Dimensions.get('screen');
+const { height, width } = Dimensions.get('screen');
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 
@@ -18,16 +18,16 @@ onPress - onPress action for whole row
 */
 export function ActivityRowStatic ({props}) {
     return (
-        <TouchableOpacity style={[styles.flex1, styles.rowFlex, styles.borderLightGrey, {height: height/ 8}]}>
+        <TouchableOpacity style={[styles.flex1, styles.rowFlex, styles.marginTop5, styles.backgroundLightBlue, {height: height/ 9}]}>
             {/* Activity */}
             <View style={[styles.flex1]}/>
             <View style={[styles.flex5 ,styles.justifyHorizontalStart, styles.justifyVerticalCenter]}>
-                <Text style={[styles.text15]}>{props.activity}</Text>
+                <Text style={[styles.text15, styles.fontBold]}>{props.activity}</Text>
             </View>
             <View style={[styles.flex1]}/>
             {/* Time */}
             <View style={[styles.flex3, styles.justifyHorizontalStart, styles.justifyVerticalCenter]}>
-                <Text style={[styles.text15]}>{props.time}</Text>
+                <Text style={[styles.text15, styles.fontBold]}>{props.time}</Text>
             </View>
         </TouchableOpacity>
     )
@@ -43,7 +43,7 @@ onPressCheck - onPress action for left side (button)
 */
 export function ActivityRowNotChecked ({props}) {
     return (
-            <View style={[styles.flex1, styles.rowFlex, styles.borderLightGrey, {height: height/ 8}]}>
+            <View style={[styles.flex1, styles.rowFlex, styles.marginTop5, styles.backgroundLightBlue, {height: height/ 9}]}>
                 <TouchableOpacity 
                     style={[styles.flex2, styles.justifyHorizontalCenter, styles.justifyVerticalCenter]}
                     onPress={props.onPressCheck}
@@ -53,11 +53,11 @@ export function ActivityRowNotChecked ({props}) {
                 <TouchableOpacity style={[styles.flex8, styles.rowFlex]} onPress={props.onPress} >
                     {/* Activity */}
                     <View style={[styles.flex5 ,styles.justifyHorizontalStart, styles.justifyVerticalCenter]}>
-                        <Text style={[styles.text15, styles.paddingLeft10]}>{props.activity}</Text>
+                        <Text style={[styles.text15, styles.paddingLeft10, styles.fontBold]}>{props.activity}</Text>
                     </View>
                     {/* Time */}
                     <View style={[styles.flex3, styles.justifyHorizontalStart, styles.justifyVerticalCenter]}>
-                        <Text style={[styles.text15, styles.paddingLeft10]}>{props.time}</Text>
+                        <Text style={[styles.text15, styles.paddingLeft10, styles.fontBold]}>{props.time}</Text>
                     </View>
                 </TouchableOpacity>
 
@@ -70,22 +70,26 @@ export function ActivityRowNotChecked ({props}) {
 props:
 activity - activity name
 time - activity time
+mood - 
+0: happy 
+1: neutral
+2: unhappy
 onPress - onPress action for right side row
 */
 export function ActivityRowChecked ({props}) {
     return (
-        <TouchableOpacity style={[styles.flex1, {height: height/ 8}]} onPress={props.onPress}>
-            <View style={[styles.flex1, styles.rowFlex, styles.borderLightGrey]}>
+        <TouchableOpacity style={[styles.flex1, styles.marginTop5, styles.backgroundLightGrey, {height: height/ 9}]} onPress={props.onPress}>
+            <View style={[styles.flex1, styles.rowFlex]}>
                 <View style={[styles.flex2, styles.justifyHorizontalCenter, styles.justifyVerticalCenter]}>
-                    <CheckBox/>
+                    {CheckBoxMood(props.mood)}
                 </View>
                 {/* Activity */}
                 <View style={[styles.flex5 ,styles.justifyHorizontalStart, styles.justifyVerticalCenter]}>
-                    <Text style={[styles.text15, styles.paddingLeft10]}>{props.activity}</Text>
+                    <Text style={[styles.text15, styles.paddingLeft10, styles.fontBold]}>{props.activity}</Text>
                 </View>
                 {/* Time */}
                 <View style={[styles.flex3, styles.justifyHorizontalStart, styles.justifyVerticalCenter]}>
-                    <Text style={[styles.text15, styles.paddingLeft10]}>{props.time}</Text>
+                    <Text style={[styles.text15, styles.paddingLeft10, styles.fontBold]}>{props.time}</Text>
                 </View>
             </View>
         </TouchableOpacity>
@@ -97,13 +101,38 @@ export function ActivityRowChecked ({props}) {
 export function CheckBox() {
     return(
         <View style={[styles.flex1, styles.rowFlex]}>
-            <View style={[styles.flex4]}/>
+            <View style={[styles.flex5]}/>
             <View style={[styles.flex5, styles.columnFlex]}>
                 <View style={[styles.flex5]}/>
-                <View style={[styles.flex3, styles.borderRadius10GreyThick]}/>
+                <View style={[styles.flex3, styles.borderRadius10GreyThick, styles.backgroundWhite]}/>
                 <View style={[styles.flex5]}/>
             </View>
-            <View style={[styles.flex4]}/>
+            <View style={[styles.flex5]}/>
+        </View>
+    )
+}
+
+//checkbox for mood 
+export function CheckBoxMood(mood) {
+    return(
+        <View style={[styles.flex1, styles.rowFlex]}>
+            <View style={[styles.flex5]}/>
+            <View style={[styles.flex5, styles.columnFlex]}>
+                <View style={[styles.flex5]}/>
+                <View style={[styles.flex3]}>
+                    {
+                        mood === 0?
+                        <MaterialCommunityIcons name="emoticon-happy-outline" size={height/38} color="green" />
+                        :
+                        mood === 1? 
+                        <MaterialCommunityIcons name="emoticon-neutral-outline" size={height/38} color="orange" />
+                        :
+                        <MaterialCommunityIcons name="emoticon-sad-outline" size={height/38} color="red" />
+                    }
+                </View>
+                <View style={[styles.flex5]}/>
+            </View>
+            <View style={[styles.flex5]}/>
         </View>
     )
 }

@@ -16,3 +16,18 @@ export function localiseAndFormatDBDate(inputDateStr) {
     return formattedDate;
 
 }
+
+
+export function convertDateTimeToDBTimeFormat(inputDateStr) {
+    const date = new Date(inputDateStr);
+
+    //get time components
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const seconds = date.getSeconds();
+
+    //final format
+    const timeString = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+    return timeString;
+}

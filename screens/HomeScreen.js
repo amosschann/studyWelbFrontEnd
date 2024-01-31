@@ -2,14 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { Alert, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import styles from '../components/Style';
 import { getAccessToken } from '../helpers/AccessTokenHelper';
-import {Calendar, LocaleConfig} from 'react-native-calendars';
+import {Calendar} from 'react-native-calendars';
 import { Dimensions } from 'react-native';
-import { ActivityRowChecked, ActivityRowNotChecked, ActivityRowStatic } from '../components/ActivityRow';
+import { ActivityRowStatic } from '../components/ActivityRow';
 import { localiseAndFormatDBDate } from '../helpers/DateTimeHelper';
+import { useNavigationState } from '@react-navigation/native';
 const { height } = Dimensions.get('screen');
 
 
 export default function HomeScreen({ navigation: { navigate }, props }){
+    const pageIndex = useNavigationState(state => state.index);
     const [accessToken, setAccessToken] = useState('');
     const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
     const [markedDatesArray, setMarkedDatesArray] = useState([]);
@@ -106,6 +108,15 @@ export default function HomeScreen({ navigation: { navigate }, props }){
             fetchSelectedDayJornal(taskDaysId);
         }
     }, [dateToId])
+
+    useEffect(() => { 
+        //reload data once back from daytasks
+        if (accessToken !== '') {
+            if (pageIndex === 0) {
+                fetchCurrentMonthTasksIds();
+            }
+        }
+    }, [pageIndex])
 
 
     /* Date Formatting */
@@ -352,16 +363,16 @@ export default function HomeScreen({ navigation: { navigate }, props }){
                 </View>
 
                 {/* bottom half */}
-                <View style={[styles.flex7, styles.backgroundLightBlue]}>
+                <View style={[styles.flex7, styles.backgroundBlue]}>
                 <View style={[styles.flex2, styles.justifyVerticalCenter, styles.rowFlex, styles.justifyHorizontalCenter]}>
                     <View style={[styles.flex1, styles.justifyHorizontalCenter]}>
-                        <Text style={[styles.text15, styles.fontBold]}>{formattedDate}</Text>
+                        <Text style={[styles.text15, styles.fontBold, styles.colourWhite]}>{formattedDate}</Text>
                     </View>
                     <TouchableOpacity 
                         style={[styles.positionAbsolute, { right: 10 }]}
                         onPress= {() => navigate('DayTasksScreen', { selectedDate: selectedDate })}
                     >
-                        <Text style={[styles.text15]}>View All →</Text>
+                        <Text style={[styles.text15, styles.colourWhite]}>View All →</Text>
                     </TouchableOpacity>
                 </View>
                     <View style={[styles.flex6, styles.backgroundWhite]}>
@@ -398,7 +409,7 @@ export default function HomeScreen({ navigation: { navigate }, props }){
                                             activity: resp.task_title,
                                             time: resp.start_time.substring(0, resp.start_time.length-3) 
                                             + " - " 
-                                            + resp.end_time.substring(0, resp.start_time.length-3)
+                                            + resp.end_time.substring(0, resp.start_time.length-3),
                                         }}
                                     />
                             )) : 
@@ -414,13 +425,13 @@ export default function HomeScreen({ navigation: { navigate }, props }){
                     </View>
                     <View style={[styles.flex1, styles.rowFlex]}>
                         <View style={[styles.flex1, styles.justifyVerticalCenter]}>
-                            <Text style={[styles.text15, styles.textAlignCenter]}>{'tasks: ' + tasks.length}</Text>
+                            <Text style={[styles.text15, styles.textAlignCenter, styles.colourWhite]}>{'tasks: ' + tasks.length}</Text>
                         </View>
                         <View style={[styles.flex1, styles.justifyVerticalCenter]}>
                             {
                                 journalAvailable?
-                                <Text style={[styles.text15, styles.textAlignCenter]}>{'journal: written'}</Text> :
-                                <Text style={[styles.text15, styles.textAlignCenter]}>{'journal: no entry'}</Text>
+                                <Text style={[styles.text15, styles.textAlignCenter, styles.colourWhite]}>{'journal: written'}</Text> :
+                                <Text style={[styles.text15, styles.textAlignCenter, styles.colourWhite]}>{'journal: no entry'}</Text>
                             } 
                             
                         </View>
