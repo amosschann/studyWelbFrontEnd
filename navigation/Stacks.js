@@ -6,6 +6,7 @@ import SettingsScreen from '../screens/SettingsScreen';
 import WellnessScreen from '../screens/WellnessScreen';
 import DayTasksScreen from '../screens/DayTasksScreen';
 import AddTasksScreen from '../screens/AddTasksScreen';
+import EditTasksScreen from '../screens/EditTasksScreen';
 
 
 //**Main Stacks with Navigator */
@@ -52,6 +53,7 @@ export function HomeStackScreen() {
         />
         {dayTasksStackScreen()}
         {addTasksStackScreen()}
+        {editTasksStackScreen()}
 
         </HomeStack.Navigator>
   );
@@ -114,6 +116,19 @@ export function addTasksStackScreen() {
           component={AddTasksScreen}
           options={{ 
             title: 'Add Tasks' 
+          }}
+        />
+  );
+}
+
+export function editTasksStackScreen() {
+  const editTasksStack = createNativeStackNavigator();
+  return(
+        <editTasksStack.Screen 
+          name="EditTasksScreen" 
+          component={EditTasksScreen}
+          options={{ 
+            title: 'Edit Tasks' 
           }}
         />
   );

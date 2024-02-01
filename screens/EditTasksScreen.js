@@ -7,12 +7,12 @@ import RNDateTimePicker from '@react-native-community/datetimepicker';
 import { convertDateTimeToDBTimeFormat } from '../helpers/DateTimeHelper';
 import { getAccessToken } from '../helpers/AccessTokenHelper';
 
-export default function AddTasksScreen ({ navigation: { goBack }, route }){
+export default function EditTasksScreen ({ navigation: { goBack }, route }){
     const [accessToken, setAccessToken] = useState('');
-    const [title, setTitle] = useState('');
-    const [taskDescription, setTaskDescription] = useState('');
-    const [startTime, setStartTime] = useState(new Date());
-    const [endTime, setEndTime] = useState(new Date());
+    const [title, setTitle] = useState(route.params.title);
+    const [taskDescription, setTaskDescription] = useState(route.params.taskDescription);
+    const [startTime, setStartTime] = useState(new Date(route.params.selectedDate + 'T' + route.params.startTime));
+    const [endTime, setEndTime] = useState(new Date(route.params.selectedDate + 'T' + route.params.endTime));
 
 
     //access token
@@ -23,8 +23,8 @@ export default function AddTasksScreen ({ navigation: { goBack }, route }){
         })
     }, []);
 
-    function submitAddTask() {
-        let url = process.env.EXPO_PUBLIC_API_URL + 'api/tasks/add-task';
+    function submitEditTask() {
+        let url = process.env.EXPO_PUBLIC_API_URL + 'api/tasks/edit-task';
 
         // empty check
         if (
@@ -38,13 +38,13 @@ export default function AddTasksScreen ({ navigation: { goBack }, route }){
         }
 
         let postData = {
-            'date': route.params.selectedDate,
             'title': title,
             'taskDescription': taskDescription,
             'startTime': convertDateTimeToDBTimeFormat(startTime),
             'endTime': convertDateTimeToDBTimeFormat(endTime),
+            'task_id': route.params.task_id
         };
-        console.log(url)
+        console.log(postData)
         fetch(url, {
             method: 'POST',
             mode: 'cors',
@@ -118,6 +118,7 @@ export default function AddTasksScreen ({ navigation: { goBack }, route }){
                             <TextInput
                                 style={[styles.flex8, styles.borderRadius20Black, styles.justifyHorizontalCenter, styles.justifyVerticalCenter, styles.textAlignLeft, styles.text15, styles.paddingLeftRight10]}
                                 placeholder="Title"
+                                defaultValue={title}
                                 placeholderTextColor="#000000"
                                 maxLength={50}
                                 onChangeText={(title) => setTitle(title)}
@@ -131,6 +132,7 @@ export default function AddTasksScreen ({ navigation: { goBack }, route }){
                             <TextInput
                                 style={[styles.flex8, styles.borderRadius20Black, styles.textAlignVerticleTop, styles.paddingLeftRight10, styles.text15]}
                                 placeholder="Description"
+                                defaultValue={taskDescription}
                                 placeholderTextColor="#000000"
                                 maxLength={255}
                                 multiline={true}
@@ -166,7 +168,7 @@ export default function AddTasksScreen ({ navigation: { goBack }, route }){
 
                         <View style={[styles.flex1]}/>
                         <View style={[styles.flex2]}>
-                            <SubmitButton props={{text: "Submit", onPress: submitAddTask}}/>
+                            <SubmitButton props={{text: "Submit", onPress: submitEditTask}}/>
                         </View>
 
                         <View style={[styles.flex3]}/>

@@ -80,6 +80,9 @@ const styles = StyleSheet.create({
       paddingTop: 40,
       paddingBottom: 20
     },
+    paddingAll20: {
+      padding: 20
+    },
     //margin
     marginTop2: {
       marginTop: 2
@@ -112,6 +115,9 @@ const styles = StyleSheet.create({
     //colur
     colourWhite: {
       color: 'white'
+    },
+    colourBlack: {
+      color: 'black'
     },
     //align content
     justifyBottom: {
@@ -172,6 +178,10 @@ const styles = StyleSheet.create({
       borderRadius: 10,
       borderColor: "#808080",
       borderWidth: 2,
+    },
+    borderRadius20: {
+      overflow: 'hidden',
+      borderRadius: 20,
     },
     borderBlack: {
       overflow: 'hidden',
