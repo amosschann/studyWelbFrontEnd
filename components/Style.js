@@ -185,6 +185,12 @@ const styles = StyleSheet.create({
       borderColor: "#808080",
       borderWidth: 2,
     },
+    borderRadius10Blue: {
+      overflow: 'hidden',
+      borderRadius: 10,
+      borderColor: "#4677B0",
+      borderWidth: 1,
+    },
     borderRadius10: {
       overflow: 'hidden',
       borderRadius: 10,

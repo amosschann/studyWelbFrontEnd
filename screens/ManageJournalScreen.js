@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, View, Alert, TextInput, TouchableOpacity, ImageBackground, KeyboardAvoidingView, Text, Keyboard, TouchableWithoutFeedback, ScrollView,  Dimensions } from 'react-native';
+import { SafeAreaView, View, Alert, TextInput, TouchableOpacity, ImageBackground, KeyboardAvoidingView, Text, Keyboard,  TouchableWithoutFeedback, ScrollView,  Dimensions } from 'react-native';
 import styles from '../components/Style';
 import * as Haptics from 'expo-haptics';
 import { SubmitButton } from '../components/Buttons';
@@ -112,12 +112,38 @@ export default function ManageJournalScreen ({ navigation: { goBack, navigate },
                 style={styles.container}
                 behavior="position"
             >
+            <TouchableWithoutFeedback 
+                onPress={Keyboard.dismiss} 
+                accessible={false}
+                style={styles.container}
+            >
             
                 <View style={[styles.mainView, styles.columnFlex]}>
 
                     <View style={[styles.flex4, styles.backgroundBlue, styles.justifyVerticalCenter, styles.justifyHorizontalCenter]}>
                         <Text style={[styles.text20, styles.fontBold, styles.colourWhite]}>{formattedDate}</Text>
                     </View>
+
+                    <View style={[styles.flex7, styles.paddingLeftRight10, styles.backgroundBlue]}>
+                        <View style={[styles.flex1, styles.backgroundWhite, styles.borderRadius10]}>
+                            <View style={[styles.flex1, styles.justifyVerticalCenter, styles.paddingAll10]}>
+                                <Text style={[styles.text20, styles.textAlignCenter]}>Overall Mood</Text>
+                            </View>
+                            <View style={[styles.flex3, styles.paddingLeftRight10, styles.rowFlex, styles.justifyVerticalCenter]}>
+                                <TouchableOpacity style={[styles.flex1, styles.justifyHorizontalCenter, styles.justifyVerticalCenter]} onPress={() => setMood(0)} >
+                                    <MaterialCommunityIcons name="emoticon-happy-outline" size={height/happySize} color="green" />
+                                </TouchableOpacity>
+                                <TouchableOpacity style={[styles.flex1, styles.justifyHorizontalCenter, styles.justifyVerticalCenter]} onPress={() => setMood(1)} >
+                                    <MaterialCommunityIcons name="emoticon-neutral-outline" size={height/neutralSize} color="orange" />
+                                </TouchableOpacity>
+                                <TouchableOpacity style={[styles.flex1, styles.justifyHorizontalCenter, styles.justifyVerticalCenter]} onPress={() => setMood(2)} >
+                                    <MaterialCommunityIcons name="emoticon-sad-outline" size={height/sadSize} color="red" />
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </View>
+                    
+                    <View style={[styles.flex1, styles.backgroundBlue]} />
 
                     <View style={[styles.flex10, styles.paddingLeftRight10, styles.backgroundBlue]}>
                         <ScrollView style={[styles.flex1, styles.backgroundWhite, styles.borderRadius10]}>
@@ -181,31 +207,12 @@ export default function ManageJournalScreen ({ navigation: { goBack, navigate },
                     </View>
 
                     <View style={[styles.flex1, styles.backgroundBlue]} />
-                    <View style={[styles.flex7, styles.paddingLeftRight10, styles.backgroundBlue]}>
-                        <View style={[styles.flex1, styles.backgroundWhite, styles.borderRadius10]}>
-                            <View style={[styles.flex1, styles.justifyVerticalCenter, styles.paddingAll10]}>
-                                <Text style={[styles.text20, styles.textAlignCenter]}>Overall Mood</Text>
-                            </View>
-                            <View style={[styles.flex3, styles.paddingLeftRight10, styles.rowFlex, styles.justifyVerticalCenter]}>
-                                <TouchableOpacity style={[styles.flex1, styles.justifyHorizontalCenter, styles.justifyVerticalCenter]} onPress={() => setMood(0)} >
-                                    <MaterialCommunityIcons name="emoticon-happy-outline" size={height/happySize} color="green" />
-                                </TouchableOpacity>
-                                <TouchableOpacity style={[styles.flex1, styles.justifyHorizontalCenter, styles.justifyVerticalCenter]} onPress={() => setMood(1)} >
-                                    <MaterialCommunityIcons name="emoticon-neutral-outline" size={height/neutralSize} color="orange" />
-                                </TouchableOpacity>
-                                <TouchableOpacity style={[styles.flex1, styles.justifyHorizontalCenter, styles.justifyVerticalCenter]} onPress={() => setMood(2)} >
-                                    <MaterialCommunityIcons name="emoticon-sad-outline" size={height/sadSize} color="red" />
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-                    </View>
-
-                    <View style={[styles.flex1, styles.backgroundBlue]} />
                     <View style={[styles.flex3, styles.backgroundBlue]}>
                         <SubmitButton props={{text: "Submit", onPress: () => submitJournalEntry()}}/>
                     </View>
                     <View style={[styles.flex2, styles.backgroundBlue]}/>
                 </View>
+            </TouchableWithoutFeedback>
             </KeyboardAvoidingView>
         </SafeAreaView>
     );

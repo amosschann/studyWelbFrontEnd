@@ -421,7 +421,7 @@ export default function HomeScreen({ navigation: { navigate }, props }){
                     </ScrollView>
                     </View>
                     <View style={[styles.flex2, styles.rowFlex]}>
-                        <TouchableOpacity style={[styles.flex1, styles.justifyVerticalCenter, styles.borderLightBlue, styles.borderRadius10, styles.backgroundBlue]} onPress= {() => navigate('JournalScreen', { selectedDate: selectedDate  })}>
+                        <TouchableOpacity style={[styles.flex1, styles.justifyVerticalCenter, styles.borderLightBlue, styles.backgroundBlue]} onPress= {() => navigate('JournalScreen', { selectedDate: selectedDate  })}>
                             {
                                 journalAvailable?
                                 <Text style={[styles.text15, styles.colourWhite, styles.textAlignCenter, styles.fontBold]}>View Journal (1)</Text> :
@@ -429,7 +429,7 @@ export default function HomeScreen({ navigation: { navigate }, props }){
                             } 
                             
                         </TouchableOpacity>
-                        <TouchableOpacity style={[styles.flex1, styles.justifyVerticalCenter, styles.borderLightBlue, styles.borderRadius10, styles.backgroundBlue]} onPress= {() => navigate('DayTasksScreen', { selectedDate: selectedDate })}>
+                        <TouchableOpacity style={[styles.flex1, styles.justifyVerticalCenter, styles.borderLightBlue, styles.backgroundBlue]} onPress= {() => navigate('DayTasksScreen', { selectedDate: selectedDate })}>
                             <Text style={[styles.text15, styles.colourWhite, styles.textAlignCenter, styles.fontBold]}>{'View Tasks (' + tasks.length + ')'}</Text>
                         </TouchableOpacity>
                     </View>

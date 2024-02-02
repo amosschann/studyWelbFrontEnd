@@ -91,13 +91,13 @@ export default function DayTasksScreen({ navigation: { navigate }, route }){
                 Alert.alert('unkown error occurred');
                 console.log(response)
             }
-            //trigger complete task fetch
-            setfetchTriggerCompletedTask(Date.now());
         })
         .then(async (jsonResponse) => {
             if (jsonResponse !== undefined) {
                 setToDoTasks(jsonResponse.result);
             }
+            //trigger complete task fetch
+            setfetchTriggerCompletedTask(Date.now());
         })
         .catch((err) => {
             console.error('Fetch error:', err);
@@ -314,26 +314,26 @@ export default function DayTasksScreen({ navigation: { navigate }, route }){
                 <View style={[styles.flex1, styles.columnFlex]}>
                     <View style={[styles.flex1]}/>
                     
-                    <View style={[styles.flex3, styles.backgroundLightBlue, styles.borderRadius20, styles.paddingAll20]}>
+                    <View style={[styles.flex3, styles.backgroundWhite, styles.borderRadius20, styles.paddingAll20]}>
                         <View style={[styles.flex1, styles.justifyHorizontalEnd]}>
                             <TouchableOpacity style={[styles.flex1, styles.justifyHorizontalCenter, styles.justifyVerticalCenter]} onPress={() => toggleMoreOptionsToDo()}>
                                 <MaterialCommunityIcons name="close-circle-outline" size={height/25} color="black" />
                             </TouchableOpacity>
                         </View>
                         <View style={[styles.flex1]}>
-                            <Text style={[styles.text20, styles.textAlignCenter, styles.fontBold, styles.backgroundDarkBlue, styles.colourWhite, styles.borderRadius10]} >Title</Text>
+                            <Text style={[styles.text20, styles.textAlignCenter, styles.fontBold, styles.backgroundBlue, styles.colourWhite]} >Title</Text>
                         </View>
                         <View style={[styles.flex1]}>
                             <Text style={[styles.text15, styles.textAlignCenter]} >{popUpTitle} </Text>
                         </View>
                         <View style={[styles.flex1]}>
-                            <Text style={[styles.text20, styles.textAlignCenter, styles.fontBold, styles.backgroundDarkBlue, styles.colourWhite, styles.borderRadius10]} >Time</Text>
+                            <Text style={[styles.text20, styles.textAlignCenter, styles.fontBold, styles.backgroundBlue, styles.colourWhite]} >Time</Text>
                         </View>
                         <View style={[styles.flex1]}>
                             <Text style={[styles.text15, styles.textAlignCenter]} >{popUpTime} </Text>
                         </View>
                         <View style={[styles.flex1]}>
-                            <Text style={[styles.text20, styles.textAlignCenter, styles.fontBold, styles.backgroundDarkBlue, styles.colourWhite, styles.borderRadius10]} >Description</Text>
+                            <Text style={[styles.text20, styles.textAlignCenter, styles.fontBold, styles.backgroundBlue, styles.colourWhite]} >Description</Text>
                         </View>
                         <View style={[styles.flex3]}>
                             <ScrollView style={[styles.flex1]}>
@@ -398,26 +398,26 @@ export default function DayTasksScreen({ navigation: { navigate }, route }){
             <Modal isVisible={moreOptionsVisibleCompleted}>
                 <View style={[styles.flex1, styles.columnFlex]}>
                     <View style={[styles.flex2]}/>
-                    <View style={[styles.flex3, styles.backgroundLightBlue, styles.borderRadius20, styles.paddingAll20]}>
+                    <View style={[styles.flex3, styles.backgroundWhite, styles.borderRadius20, styles.paddingAll20]}>
                         <View style={[styles.flex1, styles.justifyHorizontalEnd]}>
                             <TouchableOpacity style={[styles.flex1, styles.justifyHorizontalCenter, styles.justifyVerticalCenter]} onPress={() => toggleMoreOptionsCompleted()}>
                                 <MaterialCommunityIcons name="close-circle-outline" size={height/25} color="black" />
                             </TouchableOpacity>
                         </View>
                         <View style={[styles.flex1]}>
-                            <Text style={[styles.text20, styles.textAlignCenter, styles.fontBold, styles.backgroundDarkBlue, styles.colourWhite, styles.borderRadius10]} >Title</Text>
+                            <Text style={[styles.text20, styles.textAlignCenter, styles.fontBold, styles.backgroundBlue, styles.colourWhite]} >Title</Text>
                         </View>
                         <View style={[styles.flex1]}>
                             <Text style={[styles.text15, styles.textAlignCenter]} >{popUpTitle} </Text>
                         </View>
                         <View style={[styles.flex1]}>
-                            <Text style={[styles.text20, styles.textAlignCenter, styles.fontBold, styles.backgroundDarkBlue, styles.colourWhite, styles.borderRadius10]} >Time</Text>
+                            <Text style={[styles.text20, styles.textAlignCenter, styles.fontBold, styles.backgroundBlue, styles.colourWhite]} >Time</Text>
                         </View>
                         <View style={[styles.flex1]}>
                             <Text style={[styles.text15, styles.textAlignCenter]} >{popUpTime} </Text>
                         </View>
                         <View style={[styles.flex1]}>
-                            <Text style={[styles.text20, styles.textAlignCenter, styles.fontBold, styles.backgroundDarkBlue, styles.colourWhite, styles.borderRadius10]} >Description</Text>
+                            <Text style={[styles.text20, styles.textAlignCenter, styles.fontBold, styles.backgroundBlue, styles.colourWhite]} >Description</Text>
                         </View>
                         <View style={[styles.flex3]}>
                             <ScrollView style={[styles.flex1]}>
@@ -454,32 +454,32 @@ export default function DayTasksScreen({ navigation: { navigate }, route }){
             <Modal isVisible={toggleComplete}>
                 <View style={[styles.flex1, styles.columnFlex]}>
                     <View style={[styles.flex1]}/>
-                    <View style={[styles.flex1, styles.backgroundLightBlue, styles.borderRadius20, styles.paddingAll20]}>
+                    <View style={[styles.flex1, styles.backgroundWhite, styles.borderRadius20, styles.paddingAll20]}>
                         <View style={[styles.flex1, styles.justifyHorizontalEnd]}>
                             <TouchableOpacity style={[styles.flex1, styles.justifyHorizontalCenter, styles.justifyVerticalCenter]} onPress={() => toggleCompleteTask()}>
                                 <MaterialCommunityIcons name="close-circle-outline" size={height/25} color="black" />
                             </TouchableOpacity>
                         </View>
                         <View style={[styles.flex1]}>
-                            <Text style={[styles.text20, styles.textAlignCenter, styles.fontBold, styles.backgroundDarkBlue, styles.colourWhite, styles.borderRadius10]} >Title</Text>
+                            <Text style={[styles.text20, styles.textAlignCenter, styles.fontBold, styles.backgroundBlue, styles.colourWhite]} >Title</Text>
                         </View>
                         <View style={[styles.flex1]}>
                             <Text style={[styles.text20, styles.textAlignCenter]} >{popUpTitle}</Text>
                         </View>
+                        <View style={[styles.flex1]}>
+                            <Text style={[styles.text20, styles.textAlignCenter, styles.fontBold, styles.colourWhite, styles.backgroundBlue]} >Complete with a mood</Text>
+                        </View>
                         
-                        <View style={[styles.flex3, styles.rowFlex]}>
-                            <TouchableOpacity style={[styles.flex1, styles.justifyHorizontalCenter, styles.justifyVerticalCenter]} onPress={() => submitCompleteTask(0)}>
+                        <View style={[styles.flex2, styles.rowFlex]}>
+                            <TouchableOpacity style={[styles.flex1, styles.justifyHorizontalCenter, styles.justifyVerticalTop]} onPress={() => submitCompleteTask(0)}>
                                 <MaterialCommunityIcons name="emoticon-happy-outline" size={height/12} color="green" />
                             </TouchableOpacity>
-                            <TouchableOpacity style={[styles.flex1, styles.justifyHorizontalCenter, styles.justifyVerticalCenter]} onPress={() => submitCompleteTask(1)}>
+                            <TouchableOpacity style={[styles.flex1, styles.justifyHorizontalCenter, styles.justifyVerticalTop]} onPress={() => submitCompleteTask(1)}>
                                 <MaterialCommunityIcons name="emoticon-neutral-outline" size={height/12} color="orange" />
                             </TouchableOpacity>
-                            <TouchableOpacity style={[styles.flex1, styles.justifyHorizontalCenter, styles.justifyVerticalCenter]} onPress={() => submitCompleteTask(2)}>
+                            <TouchableOpacity style={[styles.flex1, styles.justifyHorizontalCenter, styles.justifyVerticalTop]} onPress={() => submitCompleteTask(2)}>
                                 <MaterialCommunityIcons name="emoticon-sad-outline" size={height/12} color="red" />
                             </TouchableOpacity>
-                        </View>
-                        <View style={[styles.flex1]}>
-                            <Text style={[styles.text20, styles.textAlignCenter, styles.fontBold]} >Complete with a mood</Text>
                         </View>
                     </View>
                     <View style={[styles.flex1]}/>

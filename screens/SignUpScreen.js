@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { SafeAreaView, View, Alert, TextInput, TouchableOpacity, ImageBackground, KeyboardAvoidingView, Text} from 'react-native';
+import { SafeAreaView, View, Alert, TextInput, TouchableOpacity, ImageBackground, TouchableWithoutFeedback, Keyboard, Text, KeyboardAvoidingView} from 'react-native';
 import styles from '../components/Style';
 import * as Haptics from 'expo-haptics';
 import { SubmitButton } from '../components/Buttons';
@@ -83,6 +83,11 @@ export default function SignUpScreen ({ navigation }){
                 style={styles.container}
                 behavior="position"
             >
+            <TouchableWithoutFeedback 
+                onPress={Keyboard.dismiss} 
+                accessible={false}
+                style={styles.container}
+            >
                 <View style={[styles.mainView, styles.columnFlex]}>
 
                     {/*Top half  */}
@@ -165,6 +170,7 @@ export default function SignUpScreen ({ navigation }){
                         <View style={[styles.flex3]}/>
                     </View>
                 </View>
+            </TouchableWithoutFeedback>
             </KeyboardAvoidingView>
         </SafeAreaView>
     );

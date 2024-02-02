@@ -103,6 +103,41 @@ export default function JournalScreen ({ navigation: { goBack, navigate }, route
                     <View style={[styles.flex4, styles.backgroundBlue, styles.justifyVerticalCenter, styles.justifyHorizontalCenter]}>
                         <Text style={[styles.text20, styles.fontBold, styles.colourWhite]}>{formattedDate}</Text>
                     </View>
+                    
+                    <View style={[styles.flex7, styles.paddingLeftRight10, styles.backgroundBlue]}>
+                        <View style={[styles.flex1, styles.backgroundWhite, styles.borderRadius10]}>
+                            <View style={[styles.flex1, styles.justifyVerticalCenter, styles.paddingAll10]}>
+                                <Text style={[styles.text20, styles.textAlignCenter]}>Overall Mood</Text>
+                            </View>
+                            <View style={[styles.flex3, styles.paddingLeftRight10, styles.justifyVerticalCenter]}>
+                                {
+                                    mood === 0 ?
+                                    <View style={[styles.flex1, styles.justifyHorizontalCenter, styles.justifyVerticalCenter]} >
+                                        <MaterialCommunityIcons name="emoticon-happy-outline" size={height/15} color="green" />
+                                    </View>
+                                    :
+                                    mood === 1 ?
+                                    <View style={[styles.flex1, styles.justifyHorizontalCenter, styles.justifyVerticalCenter]} >
+                                        <MaterialCommunityIcons name="emoticon-neutral-outline" size={height/15} color="orange" />
+                                    </View>
+                                    :
+                                    mood === 2 ? 
+                                    <View style={[styles.flex1, styles.justifyHorizontalCenter, styles.justifyVerticalCenter]} >
+                                        <MaterialCommunityIcons name="emoticon-sad-outline" size={height/15} color="red" />
+                                    </View>
+                                    :
+                                    <View style={[styles.flex1, styles.justifyHorizontalCenter, styles.justifyVerticalCenter]} >
+                                        
+                                    </View>
+                                }
+
+
+
+                            </View>
+                        </View>
+                    </View>
+
+                    <View style={[styles.flex1, styles.backgroundBlue]} />
 
                     <View style={[styles.flex10, styles.paddingLeftRight10, styles.backgroundBlue]}>
                         <ScrollView style={[styles.flex1, styles.backgroundWhite, styles.borderRadius10]}>
@@ -143,40 +178,7 @@ export default function JournalScreen ({ navigation: { goBack, navigate }, route
                     </View>
 
                     <View style={[styles.flex1, styles.backgroundBlue]} />
-                    <View style={[styles.flex7, styles.paddingLeftRight10, styles.backgroundBlue]}>
-                        <View style={[styles.flex1, styles.backgroundWhite, styles.borderRadius10]}>
-                            <View style={[styles.flex1, styles.justifyVerticalCenter, styles.paddingAll10]}>
-                                <Text style={[styles.text20, styles.textAlignCenter]}>Overall Mood</Text>
-                            </View>
-                            <View style={[styles.flex3, styles.paddingLeftRight10, styles.justifyVerticalCenter]}>
-                                {
-                                    mood === 0 ?
-                                    <View style={[styles.flex1, styles.justifyHorizontalCenter, styles.justifyVerticalCenter]} >
-                                        <MaterialCommunityIcons name="emoticon-happy-outline" size={height/15} color="green" />
-                                    </View>
-                                    :
-                                    mood === 1 ?
-                                    <View style={[styles.flex1, styles.justifyHorizontalCenter, styles.justifyVerticalCenter]} >
-                                        <MaterialCommunityIcons name="emoticon-neutral-outline" size={height/15} color="orange" />
-                                    </View>
-                                    :
-                                    mood === 2 ? 
-                                    <View style={[styles.flex1, styles.justifyHorizontalCenter, styles.justifyVerticalCenter]} >
-                                        <MaterialCommunityIcons name="emoticon-sad-outline" size={height/15} color="red" />
-                                    </View>
-                                    :
-                                    <View style={[styles.flex1, styles.justifyHorizontalCenter, styles.justifyVerticalCenter]} >
-                                        
-                                    </View>
-                                }
 
-
-
-                            </View>
-                        </View>
-                    </View>
-
-                    <View style={[styles.flex1, styles.backgroundBlue]} />
                     <View style={[styles.flex3, styles.backgroundBlue]}>
                         <SubmitButton 
                             props={{

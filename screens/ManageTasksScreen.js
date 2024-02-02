@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, View, Alert, TextInput, TouchableOpacity, ImageBackground, KeyboardAvoidingView, Text, Keyboard} from 'react-native';
+import { SafeAreaView, View, Alert, TextInput, TouchableOpacity, ImageBackground, Text, Keyboard, TouchableWithoutFeedback, KeyboardAvoidingView} from 'react-native';
 import styles from '../components/Style';
 import * as Haptics from 'expo-haptics';
 import { SubmitButton } from '../components/Buttons';
@@ -92,6 +92,11 @@ export default function ManageTasksScreen ({ navigation: { goBack }, route }){
                 style={styles.container}
                 behavior="position"
             >
+            <TouchableWithoutFeedback 
+                onPress={Keyboard.dismiss} 
+                accessible={false}
+                style={styles.container}
+            >
             
                 <View style={[styles.mainView, styles.columnFlex]}>
 
@@ -117,7 +122,7 @@ export default function ManageTasksScreen ({ navigation: { goBack }, route }){
                         <View style={[styles.flex2, styles.rowFlex]}>
                             <View style={[styles.flex1]}/>
                             <TextInput
-                                style={[styles.flex8, styles.borderRadius20Black, styles.justifyHorizontalCenter, styles.justifyVerticalCenter, styles.textAlignLeft, styles.text15, styles.paddingLeftRight10]}
+                                style={[styles.flex8, styles.justifyHorizontalCenter, styles.justifyVerticalCenter, styles.textAlignLeft, styles.text15, styles.paddingLeftRight10, styles.backgroundVLightBlue, styles.borderRadius10Blue]}
                                 placeholder="Title"
                                 defaultValue={title}
                                 placeholderTextColor="#000000"
@@ -131,7 +136,7 @@ export default function ManageTasksScreen ({ navigation: { goBack }, route }){
                         <View style={[styles.flex6, styles.rowFlex]}>
                             <View style={[styles.flex1]}/>
                             <TextInput
-                                style={[styles.flex8, styles.borderRadius20Black, styles.textAlignVerticleTop, styles.paddingLeftRight10, styles.text15]}
+                                style={[styles.flex8, styles.textAlignVerticleTop, styles.paddingLeftRight10, styles.text15, styles.backgroundVLightBlue, styles.borderRadius10Blue]}
                                 placeholder="Description"
                                 defaultValue={taskDescription}
                                 placeholderTextColor="#000000"
@@ -175,6 +180,7 @@ export default function ManageTasksScreen ({ navigation: { goBack }, route }){
                         <View style={[styles.flex3]}/>
                     </View>
                 </View>
+            </TouchableWithoutFeedback>
             </KeyboardAvoidingView>
         </SafeAreaView>
     );

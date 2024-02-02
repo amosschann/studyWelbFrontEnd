@@ -10,7 +10,7 @@ export function SubmitButton ({props}) {
         <TouchableOpacity style={[styles.flex1]} onPress={props.onPress}>
             <View style={[styles.flex1, styles.rowFlex]}>
                 <View style={[styles.flex1]}/>
-                <View style={[styles.flex8, styles.backgroundDarkBlue, styles.justifyHorizontalCenter, styles.justifyVerticalCenter, styles.borderRadius20]}>
+                <View style={[styles.flex8, styles.backgroundDarkBlue, styles.justifyHorizontalCenter, styles.justifyVerticalCenter, styles.borderRadius10]}>
                     <Text style={[styles.colourWhite, styles.text20]}>{props.text}</Text>
                 </View>
                 <View style={[styles.flex1]}/>
