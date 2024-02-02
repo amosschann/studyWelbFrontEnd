@@ -174,6 +174,7 @@ export default function HomeScreen({ navigation: { navigate }, props }){
                 return response.json();
             } else {
                 Alert.alert('unkown error occurred');
+                console.log(response)
             }
         })
         .then((jsonResponse) => {
@@ -241,6 +242,7 @@ export default function HomeScreen({ navigation: { navigate }, props }){
                 return response.json();
             } else {
                 Alert.alert('unkown error occurred');
+                console.log(response)
             }
         })
         .then(async (jsonResponse) => {
@@ -281,6 +283,7 @@ export default function HomeScreen({ navigation: { navigate }, props }){
                 return response.json();
             } else {
                 Alert.alert('unkown error occurred');
+                console.log(response)
             }
         })
         .then(async (jsonResponse) => {
@@ -363,18 +366,12 @@ export default function HomeScreen({ navigation: { navigate }, props }){
                 </View>
 
                 {/* bottom half */}
-                <View style={[styles.flex7, styles.backgroundBlue]}>
-                <View style={[styles.flex2, styles.justifyVerticalCenter, styles.rowFlex, styles.justifyHorizontalCenter]}>
-                    <View style={[styles.flex1, styles.justifyHorizontalCenter]}>
-                        <Text style={[styles.text15, styles.fontBold, styles.colourWhite]}>{formattedDate}</Text>
+                <View style={[styles.flex7]}>
+                    <View style={[styles.flex2, styles.justifyVerticalCenter, styles.rowFlex, styles.justifyHorizontalCenter, styles.backgroundBlue]}>
+                        <View style={[styles.flex1, styles.justifyHorizontalCenter]}>
+                            <Text style={[styles.text15, styles.fontBold, styles.colourWhite]}>{formattedDate}</Text>
+                        </View>
                     </View>
-                    <TouchableOpacity 
-                        style={[styles.positionAbsolute, { right: 10 }]}
-                        onPress= {() => navigate('DayTasksScreen', { selectedDate: selectedDate })}
-                    >
-                        <Text style={[styles.text15, styles.colourWhite]}>View All →</Text>
-                    </TouchableOpacity>
-                </View>
                     <View style={[styles.flex6, styles.backgroundWhite]}>
                     <ScrollView style={[styles.flex1]}>
                         {/* <ActivityRowStatic
@@ -423,19 +420,18 @@ export default function HomeScreen({ navigation: { navigate }, props }){
                         }
                     </ScrollView>
                     </View>
-                    <View style={[styles.flex1, styles.rowFlex]}>
-                        <View style={[styles.flex1, styles.justifyVerticalCenter]}>
-                            <Text style={[styles.text15, styles.textAlignCenter, styles.colourWhite]}>{'tasks: ' + tasks.length}</Text>
-                        </View>
-                        <View style={[styles.flex1, styles.justifyVerticalCenter]}>
+                    <View style={[styles.flex2, styles.rowFlex]}>
+                        <TouchableOpacity style={[styles.flex1, styles.justifyVerticalCenter, styles.borderLightBlue, styles.borderRadius10, styles.backgroundBlue]} onPress= {() => navigate('JournalScreen', { selectedDate: selectedDate  })}>
                             {
                                 journalAvailable?
-                                <Text style={[styles.text15, styles.textAlignCenter, styles.colourWhite]}>{'journal: written'}</Text> :
-                                <Text style={[styles.text15, styles.textAlignCenter, styles.colourWhite]}>{'journal: no entry'}</Text>
+                                <Text style={[styles.text15, styles.colourWhite, styles.textAlignCenter, styles.fontBold]}>View Journal (1)</Text> :
+                                <Text style={[styles.text15, styles.colourWhite, styles.textAlignCenter, styles.fontBold]}>View Journal (0)</Text>
                             } 
                             
-                        </View>
-
+                        </TouchableOpacity>
+                        <TouchableOpacity style={[styles.flex1, styles.justifyVerticalCenter, styles.borderLightBlue, styles.borderRadius10, styles.backgroundBlue]} onPress= {() => navigate('DayTasksScreen', { selectedDate: selectedDate })}>
+                            <Text style={[styles.text15, styles.colourWhite, styles.textAlignCenter, styles.fontBold]}>{'View Tasks (' + tasks.length + ')'}</Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
             </View>

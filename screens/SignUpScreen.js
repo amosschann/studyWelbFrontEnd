@@ -59,6 +59,7 @@ export default function SignUpScreen ({ navigation }){
                 });
             } else {
                 Alert.alert('unkown error occurred');
+                console.log(response)
             }
         })
         .then((jsonResponse) => {

@@ -68,6 +68,7 @@ export default function AddTasksScreen ({ navigation: { goBack }, route }){
                 });
             } else {
                 Alert.alert('unkown error occurred');
+                console.log(response)
             }
         })
         .then((jsonResponse) => {

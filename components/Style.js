@@ -83,6 +83,9 @@ const styles = StyleSheet.create({
     paddingAll20: {
       padding: 20
     },
+    paddingAll10: {
+      padding: 10
+    },
     //margin
     marginTop2: {
       marginTop: 2
@@ -118,6 +121,9 @@ const styles = StyleSheet.create({
     },
     colourBlack: {
       color: 'black'
+    },
+    colourGray: {
+      color: 'gray'
     },
     //align content
     justifyBottom: {
@@ -179,9 +185,17 @@ const styles = StyleSheet.create({
       borderColor: "#808080",
       borderWidth: 2,
     },
+    borderRadius10: {
+      overflow: 'hidden',
+      borderRadius: 10,
+    },
     borderRadius20: {
       overflow: 'hidden',
       borderRadius: 20,
+    },
+    borderRadius90: {
+      overflow: 'hidden',
+      borderRadius: 90,
     },
     borderBlack: {
       overflow: 'hidden',
@@ -196,6 +210,11 @@ const styles = StyleSheet.create({
     borderLightGrey: {
       overflow: 'hidden',
       borderColor: "#d3d3d3",
+      borderWidth: 1,
+    },
+    borderLightBlue: {
+      overflow: 'hidden',
+      borderColor: "#f3fbfb",
       borderWidth: 1,
     },
     borderGreynoBottom: {

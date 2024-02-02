@@ -20,6 +20,7 @@ export default function DayTasksScreen({ navigation: { navigate }, route }){
     const [selectedToDoTaskIndex, setSelectedToDoTaskIndex] = useState('default');
     const [selectedCompletedTaskIndex, setSelectedCompletedTaskIndex] = useState('default');
     const [toggleComplete, setToggleComplete] = useState(false);
+    const [fetchTriggerCompletedTask, setfetchTriggerCompletedTask] = useState('')
 
 
       
@@ -35,7 +36,6 @@ export default function DayTasksScreen({ navigation: { navigate }, route }){
     useEffect(() => {
         if (accessToken !== '') {
             fetchToDoTasks();
-            fetchCompletedTasks();
         }
     }, [accessToken])
 
@@ -44,10 +44,16 @@ export default function DayTasksScreen({ navigation: { navigate }, route }){
         if (accessToken !== '') {
             if (pageIndex === 1) {
                 fetchToDoTasks();
-                fetchCompletedTasks();
             }
         }
     }, [pageIndex])
+
+    //fetches completed tasks right after todo task finishes fetching
+    useEffect(() => {
+        if (accessToken !== '') {
+            fetchCompletedTasks();
+        }
+    }, [fetchTriggerCompletedTask])
 
 
     /* Date Formatting */
@@ -58,6 +64,7 @@ export default function DayTasksScreen({ navigation: { navigate }, route }){
 
     //fetch todo tasks for current date 
     function fetchToDoTasks() {
+        console.log('fetching todo tasks')
         const data = {
             date: route.params.selectedDate
         }
@@ -82,12 +89,14 @@ export default function DayTasksScreen({ navigation: { navigate }, route }){
                 return response.json();
             } else {
                 Alert.alert('unkown error occurred');
+                console.log(response)
             }
+            //trigger complete task fetch
+            setfetchTriggerCompletedTask(Date.now());
         })
         .then(async (jsonResponse) => {
             if (jsonResponse !== undefined) {
-                setToDoTasks(jsonResponse.result)
-            
+                setToDoTasks(jsonResponse.result);
             }
         })
         .catch((err) => {
@@ -120,7 +129,8 @@ export default function DayTasksScreen({ navigation: { navigate }, route }){
             if (response.ok) {
                 return response.json();
             } else {
-                Alert.alert('unkown error occurred');
+            Alert.alert('Unknown error occurred');
+            console.log(response);
             }
         })
         .then(async (jsonResponse) => {
@@ -165,6 +175,7 @@ export default function DayTasksScreen({ navigation: { navigate }, route }){
                 });
             } else {
                 Alert.alert('unkown error occurred');
+                console.log(response)
             }
         })
         .then((jsonResponse) => {
@@ -214,6 +225,7 @@ export default function DayTasksScreen({ navigation: { navigate }, route }){
                 });
             } else {
                 Alert.alert('unkown error occurred');
+                console.log(response)
             }
         })
         .then((jsonResponse) => {
@@ -263,6 +275,7 @@ export default function DayTasksScreen({ navigation: { navigate }, route }){
                 });
             } else {
                 Alert.alert('unkown error occurred');
+                console.log(response)
             }
         })
         .then((jsonResponse) => {
@@ -289,10 +302,18 @@ export default function DayTasksScreen({ navigation: { navigate }, route }){
     
     //pop up modal for todo tasks 
     function MoreOptionsPopUpToDo() {
+        //process data strings
+        let popUpTitle = toDoTasks[selectedToDoTaskIndex]?.task_title;
+        let popUpStartTime = toDoTasks[selectedToDoTaskIndex]?.start_time;
+        let popUpEndTime = toDoTasks[selectedToDoTaskIndex]?.end_time;
+        let popUpTime = popUpStartTime?.substring(0, popUpStartTime.length - 3) + ' - ' + popUpEndTime?.substring(0, popUpEndTime.length - 3)
+        let popUpDescription = toDoTasks[selectedToDoTaskIndex]?.task_description;
+
         return (
             <Modal isVisible={moreOptionsVisibleToDo}>
                 <View style={[styles.flex1, styles.columnFlex]}>
-                    <View style={[styles.flex2]}/>
+                    <View style={[styles.flex1]}/>
+                    
                     <View style={[styles.flex3, styles.backgroundLightBlue, styles.borderRadius20, styles.paddingAll20]}>
                         <View style={[styles.flex1, styles.justifyHorizontalEnd]}>
                             <TouchableOpacity style={[styles.flex1, styles.justifyHorizontalCenter, styles.justifyVerticalCenter]} onPress={() => toggleMoreOptionsToDo()}>
@@ -300,30 +321,30 @@ export default function DayTasksScreen({ navigation: { navigate }, route }){
                             </TouchableOpacity>
                         </View>
                         <View style={[styles.flex1]}>
-                            <Text style={[styles.text20, styles.textAlignCenter, styles.fontBold]} >Title</Text>
+                            <Text style={[styles.text20, styles.textAlignCenter, styles.fontBold, styles.backgroundDarkBlue, styles.colourWhite, styles.borderRadius10]} >Title</Text>
                         </View>
                         <View style={[styles.flex1]}>
-                            <Text style={[styles.text15, styles.textAlignCenter]} >{toDoTasks[selectedToDoTaskIndex]?.task_title}</Text>
+                            <Text style={[styles.text15, styles.textAlignCenter]} >{popUpTitle} </Text>
                         </View>
                         <View style={[styles.flex1]}>
-                            <Text style={[styles.text20, styles.textAlignCenter, styles.fontBold]} >Time</Text>
+                            <Text style={[styles.text20, styles.textAlignCenter, styles.fontBold, styles.backgroundDarkBlue, styles.colourWhite, styles.borderRadius10]} >Time</Text>
                         </View>
                         <View style={[styles.flex1]}>
-                            <Text style={[styles.text15, styles.textAlignCenter]} >{toDoTasks[selectedToDoTaskIndex]?.start_time + ' - ' + toDoTasks[selectedToDoTaskIndex]?.end_time}</Text>
+                            <Text style={[styles.text15, styles.textAlignCenter]} >{popUpTime} </Text>
                         </View>
                         <View style={[styles.flex1]}>
-                            <Text style={[styles.text20, styles.textAlignCenter, styles.fontBold]} >Description</Text>
+                            <Text style={[styles.text20, styles.textAlignCenter, styles.fontBold, styles.backgroundDarkBlue, styles.colourWhite, styles.borderRadius10]} >Description</Text>
                         </View>
                         <View style={[styles.flex3]}>
                             <ScrollView style={[styles.flex1]}>
-                                <Text style={[styles.text15, styles.textAlignLeft, styles.paddingLeftRight10]} >{toDoTasks[selectedToDoTaskIndex]?.task_description}</Text>
+                                <Text style={[styles.text15, styles.textAlignLeft, styles.paddingLeftRight10]} > {popUpDescription} </Text>
                             </ScrollView>
                         </View>
                         <View style={[styles.flex2, styles.rowFlex]}>
                             <TouchableOpacity 
-                                style={[styles.flex1, styles.justifyHorizontalCenter, styles.justifyVerticalCenter]}
+                                style={[styles.flex1, styles.columnFlex, styles.justifyHorizontalCenter, styles.justifyVerticalCenter]}
                                 onPress= {() => {
-                                    navigate('EditTasksScreen', { 
+                                    navigate('ManageTasksScreen', { 
                                         selectedDate: route.params.selectedDate, 
                                         title: toDoTasks[selectedToDoTaskIndex]?.task_title,
                                         taskDescription: toDoTasks[selectedToDoTaskIndex]?.task_description,
@@ -335,13 +356,24 @@ export default function DayTasksScreen({ navigation: { navigate }, route }){
                                     }
                                 }
                             >
-                                <MaterialCommunityIcons name="pencil-circle-outline" size={height/15} color="green" />
+                                <View style={[styles.flex3]}>
+                                    <MaterialCommunityIcons name="pencil-circle-outline" size={height/15} color="green" />
+                                </View>
+                                <View style={[styles.flex1]}>
+                                    <Text style={[styles.text15, styles.textAlignCenter, styles.fontBold]} >Edit</Text>
+                                </View>
                             </TouchableOpacity>
-                            <TouchableOpacity style={[styles.flex1, styles.justifyHorizontalCenter, styles.justifyVerticalCenter]} onPress={() => submitDeleteTask()}>
-                                <MaterialCommunityIcons name="delete-circle-outline" size={height/15} color="red" />
+                            <TouchableOpacity style={[styles.flex1, styles.columnFlex, styles.justifyHorizontalCenter, styles.justifyVerticalCenter]} onPress={() => submitDeleteTask()}>
+                                <View style={[styles.flex3]}>
+                                    <MaterialCommunityIcons name="delete-circle-outline" size={height/15} color="red" />
+                                </View>
+                                <View style={[styles.flex1]}>
+                                    <Text style={[styles.text15, styles.textAlignCenter, styles.fontBold]} >Delete</Text>
+                                </View>
                             </TouchableOpacity>
                         </View>
                     </View>
+
                     <View style={[styles.flex1]}/>
                 </View>
             </Modal>
@@ -355,6 +387,13 @@ export default function DayTasksScreen({ navigation: { navigate }, route }){
     
     //pop up modal for complete task
     function MoreOptionsPopUpCompleted() {
+        //process data strings
+        let popUpTitle = completedTasks[selectedCompletedTaskIndex]?.task_title;
+        let popUpStartTime = completedTasks[selectedCompletedTaskIndex]?.start_time;
+        let popUpEndTime = completedTasks[selectedCompletedTaskIndex]?.end_time;
+        let popUpTime = popUpStartTime?.substring(0, popUpStartTime.length - 3) + ' - ' + popUpEndTime?.substring(0, popUpEndTime.length - 3)
+        let popUpDescription = completedTasks[selectedCompletedTaskIndex]?.task_description;
+
         return (
             <Modal isVisible={moreOptionsVisibleCompleted}>
                 <View style={[styles.flex1, styles.columnFlex]}>
@@ -366,23 +405,23 @@ export default function DayTasksScreen({ navigation: { navigate }, route }){
                             </TouchableOpacity>
                         </View>
                         <View style={[styles.flex1]}>
-                            <Text style={[styles.text20, styles.textAlignCenter, styles.fontBold]} >Title</Text>
+                            <Text style={[styles.text20, styles.textAlignCenter, styles.fontBold, styles.backgroundDarkBlue, styles.colourWhite, styles.borderRadius10]} >Title</Text>
                         </View>
                         <View style={[styles.flex1]}>
-                            <Text style={[styles.text15, styles.textAlignCenter]} >{completedTasks[selectedCompletedTaskIndex]?.task_title}</Text>
+                            <Text style={[styles.text15, styles.textAlignCenter]} >{popUpTitle} </Text>
                         </View>
                         <View style={[styles.flex1]}>
-                            <Text style={[styles.text20, styles.textAlignCenter, styles.fontBold]} >Time</Text>
+                            <Text style={[styles.text20, styles.textAlignCenter, styles.fontBold, styles.backgroundDarkBlue, styles.colourWhite, styles.borderRadius10]} >Time</Text>
                         </View>
                         <View style={[styles.flex1]}>
-                            <Text style={[styles.text15, styles.textAlignCenter]} >{completedTasks[selectedCompletedTaskIndex]?.start_time + ' - ' + completedTasks[selectedCompletedTaskIndex]?.end_time}</Text>
+                            <Text style={[styles.text15, styles.textAlignCenter]} >{popUpTime} </Text>
                         </View>
                         <View style={[styles.flex1]}>
-                            <Text style={[styles.text20, styles.textAlignCenter, styles.fontBold]} >Description</Text>
+                            <Text style={[styles.text20, styles.textAlignCenter, styles.fontBold, styles.backgroundDarkBlue, styles.colourWhite, styles.borderRadius10]} >Description</Text>
                         </View>
                         <View style={[styles.flex3]}>
                             <ScrollView style={[styles.flex1]}>
-                                <Text style={[styles.text15, styles.textAlignLeft, styles.paddingLeftRight10]} >{completedTasks[selectedCompletedTaskIndex]?.task_description}</Text>
+                                <Text style={[styles.text15, styles.textAlignLeft, styles.paddingLeftRight10]} >{popUpDescription} </Text>
                             </ScrollView>
                         </View>
                         <View style={[styles.flex2, styles.rowFlex]}>
@@ -408,6 +447,9 @@ export default function DayTasksScreen({ navigation: { navigate }, route }){
     
     //pop up modal for todo tasks 
     function CompleteTaskPopUp() {
+        //process data strings
+        let popUpTitle = toDoTasks[selectedToDoTaskIndex]?.task_title;
+
         return (
             <Modal isVisible={toggleComplete}>
                 <View style={[styles.flex1, styles.columnFlex]}>
@@ -415,25 +457,25 @@ export default function DayTasksScreen({ navigation: { navigate }, route }){
                     <View style={[styles.flex1, styles.backgroundLightBlue, styles.borderRadius20, styles.paddingAll20]}>
                         <View style={[styles.flex1, styles.justifyHorizontalEnd]}>
                             <TouchableOpacity style={[styles.flex1, styles.justifyHorizontalCenter, styles.justifyVerticalCenter]} onPress={() => toggleCompleteTask()}>
-                                <MaterialCommunityIcons name="close-circle-outline" size={height/20} color="black" />
+                                <MaterialCommunityIcons name="close-circle-outline" size={height/25} color="black" />
                             </TouchableOpacity>
                         </View>
                         <View style={[styles.flex1]}>
-                            <Text style={[styles.text20, styles.textAlignCenter, styles.fontBold]} >Title</Text>
+                            <Text style={[styles.text20, styles.textAlignCenter, styles.fontBold, styles.backgroundDarkBlue, styles.colourWhite, styles.borderRadius10]} >Title</Text>
                         </View>
                         <View style={[styles.flex1]}>
-                            <Text style={[styles.text15, styles.textAlignCenter]} >{toDoTasks[selectedToDoTaskIndex]?.task_title}</Text>
+                            <Text style={[styles.text20, styles.textAlignCenter]} >{popUpTitle}</Text>
                         </View>
                         
-                        <View style={[styles.flex2, styles.rowFlex]}>
+                        <View style={[styles.flex3, styles.rowFlex]}>
                             <TouchableOpacity style={[styles.flex1, styles.justifyHorizontalCenter, styles.justifyVerticalCenter]} onPress={() => submitCompleteTask(0)}>
-                                <MaterialCommunityIcons name="emoticon-happy-outline" size={height/15} color="green" />
+                                <MaterialCommunityIcons name="emoticon-happy-outline" size={height/12} color="green" />
                             </TouchableOpacity>
                             <TouchableOpacity style={[styles.flex1, styles.justifyHorizontalCenter, styles.justifyVerticalCenter]} onPress={() => submitCompleteTask(1)}>
-                                <MaterialCommunityIcons name="emoticon-neutral-outline" size={height/15} color="orange" />
+                                <MaterialCommunityIcons name="emoticon-neutral-outline" size={height/12} color="orange" />
                             </TouchableOpacity>
                             <TouchableOpacity style={[styles.flex1, styles.justifyHorizontalCenter, styles.justifyVerticalCenter]} onPress={() => submitCompleteTask(2)}>
-                                <MaterialCommunityIcons name="emoticon-sad-outline" size={height/15} color="red" />
+                                <MaterialCommunityIcons name="emoticon-sad-outline" size={height/12} color="red" />
                             </TouchableOpacity>
                         </View>
                         <View style={[styles.flex1]}>
@@ -454,12 +496,7 @@ export default function DayTasksScreen({ navigation: { navigate }, route }){
 
                 {/*Top half  */}
                 <View style={[styles.flex3]}>
-                    <View style={[styles.flex2, styles.backgroundBlue, styles.justifyVerticalCenter]}>
-                        <TouchableOpacity style={[styles.positionAbsolute, { right: 10 }]}>
-                            <Text style={[styles.text15, styles.fontBold, styles.colourWhite]}>Daily Journal →</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={[styles.flex5]}>
+                    <View style={[styles.flex1]}>
 
                     </View>
                 </View>
@@ -487,7 +524,7 @@ export default function DayTasksScreen({ navigation: { navigate }, route }){
                         {
                             (toDoTasks.length > 0 || completedTasks.length > 0) ? (
                                 <React.Fragment>
-                                    <Text  style={[styles.text20, styles.textAlignCenter, styles.fontBold, styles.paddingTopBottom20]} > To Do </Text>
+                                    <Text  style={[styles.text20, styles.textAlignCenter, styles.fontBold, styles.paddingTopBottom20]} >To Do</Text>
                                     {toDoTasks.map((resp, index) => (
                                         <ActivityRowNotChecked
                                             key={'activityrow' + index}
@@ -509,7 +546,7 @@ export default function DayTasksScreen({ navigation: { navigate }, route }){
                                             }}
                                         />
                                     ))}
-                                    <Text  style={[styles.text20, styles.textAlignCenter, styles.fontBold, styles.paddingTop40Bottom20]} > Completed </Text>
+                                    <Text  style={[styles.text20, styles.textAlignCenter, styles.fontBold, styles.paddingTop40Bottom20]} >Completed</Text>
                                     {completedTasks.map((resp, index) => (
                                         <ActivityRowChecked
                                             key={'activityrow' + index}

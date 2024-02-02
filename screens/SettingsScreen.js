@@ -60,19 +60,20 @@ export default function SettingsScreen({ navigation: { navigate }, props }){
             <View style={[styles.mainView, styles.columnFlex]}>
 
                 {/*Top half  */}
-                <View style={[styles.flex3, styles.backgroundBlue]}>
-                    <View style={[styles.flex5]}>
+                <View style={[styles.flex3]}>
+                    <View style={[styles.flex5,]}>
                         <View style={[styles.flex1]}/>
                         <ImageBackground
                             source={require('../assets/profile-pic.png')} 
-                            style={[styles.flex5]} 
+                            style={[styles.flex7]} 
                             imageStyle= {[styles.objectFitCover, styles.objectFitContain]}
                         />
+                        <View style={[styles.flex1]}/>
                     </View>
-                    <View style={[styles.flex1, styles.justifyVerticalBottom, styles.justifyHorizontalCenter]}>
+                    <View style={[styles.flex1, styles.justifyVerticalBottom, styles.justifyHorizontalCenter, styles.backgroundBlue]}>
                         <Text style={[styles.text20, styles.colourWhite, styles.fontBold]}>{userName}</Text>
                     </View>
-                    <View style={[styles.flex1, styles.justifyVerticalCenter, styles.justifyHorizontalCenter]}>
+                    <View style={[styles.flex1, styles.justifyVerticalCenter, styles.justifyHorizontalCenter, styles.backgroundBlue]}>
                     <Text style={[styles.text15, styles.colourWhite]}>{email}</Text>
                     </View>
                 </View>

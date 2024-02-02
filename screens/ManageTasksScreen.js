@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, View, Alert, TextInput, TouchableOpacity, ImageBackground, KeyboardAvoidingView, Text, Keyboard, TouchableWithoutFeedback} from 'react-native';
+import { SafeAreaView, View, Alert, TextInput, TouchableOpacity, ImageBackground, KeyboardAvoidingView, Text, Keyboard} from 'react-native';
 import styles from '../components/Style';
 import * as Haptics from 'expo-haptics';
 import { SubmitButton } from '../components/Buttons';
@@ -7,7 +7,7 @@ import RNDateTimePicker from '@react-native-community/datetimepicker';
 import { convertDateTimeToDBTimeFormat } from '../helpers/DateTimeHelper';
 import { getAccessToken } from '../helpers/AccessTokenHelper';
 
-export default function EditTasksScreen ({ navigation: { goBack }, route }){
+export default function ManageTasksScreen ({ navigation: { goBack }, route }){
     const [accessToken, setAccessToken] = useState('');
     const [title, setTitle] = useState(route.params.title);
     const [taskDescription, setTaskDescription] = useState(route.params.taskDescription);
@@ -68,6 +68,7 @@ export default function EditTasksScreen ({ navigation: { goBack }, route }){
                 });
             } else {
                 Alert.alert('unkown error occurred');
+                console.log(response)
             }
         })
         .then((jsonResponse) => {

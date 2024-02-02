@@ -6,7 +6,9 @@ import SettingsScreen from '../screens/SettingsScreen';
 import WellnessScreen from '../screens/WellnessScreen';
 import DayTasksScreen from '../screens/DayTasksScreen';
 import AddTasksScreen from '../screens/AddTasksScreen';
-import EditTasksScreen from '../screens/EditTasksScreen';
+import ManageTasksScreen from '../screens/ManageTasksScreen';
+import JournalScreen from '../screens/JournalScreen';
+import ManageJournalScreen from '../screens/ManageJournalScreen';
 
 
 //**Main Stacks with Navigator */
@@ -53,7 +55,9 @@ export function HomeStackScreen() {
         />
         {dayTasksStackScreen()}
         {addTasksStackScreen()}
-        {editTasksStackScreen()}
+        {manageTasksStackScreen()}
+        {journalStackScreen()}
+        {manageJournalStackScreen()}
 
         </HomeStack.Navigator>
   );
@@ -121,16 +125,41 @@ export function addTasksStackScreen() {
   );
 }
 
-export function editTasksStackScreen() {
-  const editTasksStack = createNativeStackNavigator();
+export function manageTasksStackScreen() {
+  const manageTasksStack = createNativeStackNavigator();
   return(
-        <editTasksStack.Screen 
-          name="EditTasksScreen" 
-          component={EditTasksScreen}
+        <manageTasksStack.Screen 
+          name="ManageTasksScreen" 
+          component={ManageTasksScreen}
           options={{ 
-            title: 'Edit Tasks' 
+            title: 'Manage Tasks' 
           }}
         />
   );
 }
 
+export function journalStackScreen() {
+  const journalStack = createNativeStackNavigator();
+  return(
+        <journalStack.Screen 
+          name="JournalScreen" 
+          component={JournalScreen}
+          options={{ 
+            title: 'Journal' 
+          }}
+        />
+  );
+}
+
+export function manageJournalStackScreen() {
+  const manageJournalStack = createNativeStackNavigator();
+  return(
+        <manageJournalStack.Screen 
+          name="ManageJournalScreen" 
+          component={ManageJournalScreen}
+          options={{ 
+            title: 'Manage Journal' 
+          }}
+        />
+  );
+}
