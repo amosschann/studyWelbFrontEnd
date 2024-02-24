@@ -9,6 +9,7 @@ import AddTasksScreen from '../screens/AddTasksScreen';
 import ManageTasksScreen from '../screens/ManageTasksScreen';
 import JournalScreen from '../screens/JournalScreen';
 import ManageJournalScreen from '../screens/ManageJournalScreen';
+import ManageWellnessScreen from '../screens/ManageWellnessScreen';
 
 
 //**Main Stacks with Navigator */
@@ -75,7 +76,7 @@ export function WellnessStackScreen() {
             title: "Wellness"
           }}
         />
-
+        {manageWellnessStackScreen()}
         </WellnessStack.Navigator>
   );
 }
@@ -159,6 +160,19 @@ export function manageJournalStackScreen() {
           component={ManageJournalScreen}
           options={{ 
             title: 'Manage Journal' 
+          }}
+        />
+  );
+}
+
+export function manageWellnessStackScreen() {
+  const manageWellnessStack = createNativeStackNavigator();
+  return(
+        <manageWellnessStack.Screen 
+          name="ManageWellnessScreen" 
+          component={ManageWellnessScreen}
+          options={{ 
+            title: 'Manage Wellness' 
           }}
         />
   );

@@ -324,20 +324,20 @@ export default function DayTasksScreen({ navigation: { navigate }, route }){
                             <Text style={[styles.text20, styles.textAlignCenter, styles.fontBold, styles.backgroundBlue, styles.colourWhite]} >Title</Text>
                         </View>
                         <View style={[styles.flex1]}>
-                            <Text style={[styles.text15, styles.textAlignCenter]} >{popUpTitle} </Text>
+                            <Text style={[styles.text15, styles.textAlignCenter, styles.fontBold]} >{popUpTitle} </Text>
                         </View>
                         <View style={[styles.flex1]}>
                             <Text style={[styles.text20, styles.textAlignCenter, styles.fontBold, styles.backgroundBlue, styles.colourWhite]} >Time</Text>
                         </View>
                         <View style={[styles.flex1]}>
-                            <Text style={[styles.text15, styles.textAlignCenter]} >{popUpTime} </Text>
+                            <Text style={[styles.text15, styles.textAlignCenter, styles.fontBold]} >{popUpTime} </Text>
                         </View>
                         <View style={[styles.flex1]}>
                             <Text style={[styles.text20, styles.textAlignCenter, styles.fontBold, styles.backgroundBlue, styles.colourWhite]} >Description</Text>
                         </View>
                         <View style={[styles.flex3]}>
                             <ScrollView style={[styles.flex1]}>
-                                <Text style={[styles.text15, styles.textAlignLeft, styles.paddingLeftRight10]} > {popUpDescription} </Text>
+                                <Text style={[styles.text15, styles.textAlignLeft, styles.paddingLeftRight10, styles.fontBold]} > {popUpDescription} </Text>
                             </ScrollView>
                         </View>
                         <View style={[styles.flex2, styles.rowFlex]}>
@@ -408,20 +408,20 @@ export default function DayTasksScreen({ navigation: { navigate }, route }){
                             <Text style={[styles.text20, styles.textAlignCenter, styles.fontBold, styles.backgroundBlue, styles.colourWhite]} >Title</Text>
                         </View>
                         <View style={[styles.flex1]}>
-                            <Text style={[styles.text15, styles.textAlignCenter]} >{popUpTitle} </Text>
+                            <Text style={[styles.text15, styles.textAlignCenter, styles.fontBold]} >{popUpTitle} </Text>
                         </View>
                         <View style={[styles.flex1]}>
                             <Text style={[styles.text20, styles.textAlignCenter, styles.fontBold, styles.backgroundBlue, styles.colourWhite]} >Time</Text>
                         </View>
                         <View style={[styles.flex1]}>
-                            <Text style={[styles.text15, styles.textAlignCenter]} >{popUpTime} </Text>
+                            <Text style={[styles.text15, styles.textAlignCenter, styles.fontBold]} >{popUpTime} </Text>
                         </View>
                         <View style={[styles.flex1]}>
                             <Text style={[styles.text20, styles.textAlignCenter, styles.fontBold, styles.backgroundBlue, styles.colourWhite]} >Description</Text>
                         </View>
                         <View style={[styles.flex3]}>
                             <ScrollView style={[styles.flex1]}>
-                                <Text style={[styles.text15, styles.textAlignLeft, styles.paddingLeftRight10]} >{popUpDescription} </Text>
+                                <Text style={[styles.text15, styles.textAlignLeft, styles.paddingLeftRight10, styles.fontBold]} >{popUpDescription} </Text>
                             </ScrollView>
                         </View>
                         <View style={[styles.flex2, styles.rowFlex]}>
@@ -464,7 +464,7 @@ export default function DayTasksScreen({ navigation: { navigate }, route }){
                             <Text style={[styles.text20, styles.textAlignCenter, styles.fontBold, styles.backgroundBlue, styles.colourWhite]} >Title</Text>
                         </View>
                         <View style={[styles.flex1]}>
-                            <Text style={[styles.text20, styles.textAlignCenter]} >{popUpTitle}</Text>
+                            <Text style={[styles.text20, styles.textAlignCenter, styles.fontBold]} >{popUpTitle}</Text>
                         </View>
                         <View style={[styles.flex1]}>
                             <Text style={[styles.text20, styles.textAlignCenter, styles.fontBold, styles.colourWhite, styles.backgroundBlue]} >Complete with a mood</Text>

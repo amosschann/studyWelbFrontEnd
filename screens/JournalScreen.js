@@ -130,9 +130,6 @@ export default function JournalScreen ({ navigation: { goBack, navigate }, route
                                         
                                     </View>
                                 }
-
-
-
                             </View>
                         </View>
                     </View>

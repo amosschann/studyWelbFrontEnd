@@ -72,6 +72,10 @@ const styles = StyleSheet.create({
       paddingLeft: 10,
       paddingRight: 10
     },
+    paddingLeftRight20: {
+      paddingLeft: 20,
+      paddingRight: 20
+    },
     paddingTopBottom20: {
       paddingTop: 20,
       paddingBottom: 20
@@ -190,6 +194,16 @@ const styles = StyleSheet.create({
       borderRadius: 10,
       borderColor: "#4677B0",
       borderWidth: 1,
+    },
+    borderRadiusTop10: {
+      borderTopRightRadius: 10,
+      borderTopLeftRadius: 10,
+      overflow: 'hidden'
+    },
+    borderRadiusBottom10: {
+      borderBottomRightRadius: 10,
+      borderBottomLeftRadius: 10,
+      overflow: 'hidden',
     },
     borderRadius10: {
       overflow: 'hidden',

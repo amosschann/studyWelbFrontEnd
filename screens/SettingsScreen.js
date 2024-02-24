@@ -61,7 +61,7 @@ export default function SettingsScreen({ navigation: { navigate }, props }){
 
                 {/*Top half  */}
                 <View style={[styles.flex3]}>
-                    <View style={[styles.flex5,]}>
+                    <View style={[styles.flex5,styles.backgroundLightBlue]}>
                         <View style={[styles.flex1]}/>
                         <ImageBackground
                             source={require('../assets/profile-pic.png')} 
