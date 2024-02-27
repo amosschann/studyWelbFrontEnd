@@ -84,8 +84,14 @@ const styles = StyleSheet.create({
       paddingTop: 40,
       paddingBottom: 20
     },
+    paddingBottom10: {
+      paddingBottom: 10
+    },
     paddingAll20: {
       padding: 20
+    },
+    paddingAll15: {
+      padding: 15
     },
     paddingAll10: {
       padding: 10
@@ -118,6 +124,9 @@ const styles = StyleSheet.create({
     },
     backgroundVLightBlue: {
       backgroundColor: '#f3fbfb'
+    },
+    backgroundGreen: {
+      backgroundColor: '#20867F'
     },
     //colur
     colourWhite: {
@@ -259,6 +268,7 @@ const styles = StyleSheet.create({
     objectFitCover: {
       objectFit: 'cover'
     },
+
   
 });
 

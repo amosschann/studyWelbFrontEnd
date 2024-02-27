@@ -1,17 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import { Alert, SafeAreaView, ScrollView, Text, TouchableOpacity, View, Button, Dimensions } from 'react-native';
+import React, { useEffect, useState, useRef  } from 'react';
+import { Animated, Easing, Alert, SafeAreaView, ScrollView, Text, TouchableOpacity, View, Button, Dimensions } from 'react-native';
 import styles from '../components/Style';
 import { getAccessToken } from '../helpers/AccessTokenHelper';
-import { ActivityRowChecked, ActivityRowNotChecked, ActivityRowStatic } from '../components/ActivityRow';
+import { AcitivityWellnessRow, ActivityRowChecked, ActivityRowNotChecked, ActivityRowStatic } from '../components/ActivityRow';
 import { useNavigationState } from '@react-navigation/native';
 import Modal from "react-native-modal";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 const { height, width } = Dimensions.get('screen');
 import * as Haptics from 'expo-haptics';
+import MoodMeter from '../components/MoodMeter';
+import { CompleteToDoTaskModal, CompletedTaskModal, ToDoTaskModal, WellnessTaskModal } from '../components/PopUps';
 
 export default function DayTasksScreen({ navigation: { navigate }, route }){
     const pageIndex = useNavigationState(state => state.index);
     const [accessToken, setAccessToken] = useState('');
+    const [wellnessTasks, setWellnessTasks] = useState([]);
     const [toDoTasks, setToDoTasks] = useState([]);
     const [completedTasks, setCompletedTasks] = useState([]);
     const [moreOptionsVisibleToDo, setmoreOptionsVisibleToDo] = useState(false);
@@ -21,8 +24,11 @@ export default function DayTasksScreen({ navigation: { navigate }, route }){
     const [selectedCompletedTaskIndex, setSelectedCompletedTaskIndex] = useState('default');
     const [toggleComplete, setToggleComplete] = useState(false);
     const [fetchTriggerCompletedTask, setfetchTriggerCompletedTask] = useState('')
-
-
+    const [moodLevel, setMoodLevel] = useState(50);
+    const [moodCheckPoint, setMoodCheckPoint] = useState(0);
+    const [wellnessTaskNumber, setWellnessTaskNumber] = useState(Math.floor(Math.random() * 5))
+    const fadeAnimation = useRef(new Animated.Value(0)).current;
+    const [toggleWellness, setToggleWellness] = useState(false);
       
     //access token
     useEffect(() => {
@@ -61,6 +67,24 @@ export default function DayTasksScreen({ navigation: { navigate }, route }){
     const options = { day: "numeric", month: "short", year: "numeric" };
     const formattedDate = inputDate.toLocaleDateString("en-GB", options);
 
+    //animation for wellness fade in and out
+    const fadeIn = () => {
+        Animated.timing(fadeAnimation, {
+        toValue: 1,
+        duration: 1000, 
+        easing: Easing.linear,
+        useNativeDriver: true,
+        }).start();
+    };
+    
+    const fadeOut = () => {
+        Animated.timing(fadeAnimation, {
+        toValue: 0,
+        duration: 1000, 
+        easing: Easing.linear,
+        useNativeDriver: true,
+        }).start();
+    };
 
     //fetch todo tasks for current date 
     function fetchToDoTasks() {
@@ -136,7 +160,69 @@ export default function DayTasksScreen({ navigation: { navigate }, route }){
         .then(async (jsonResponse) => {
             if (jsonResponse !== undefined) {
                 setCompletedTasks(jsonResponse.result)
-            
+                //calculation for mood 
+                let moodLevelCalc = 50;
+                let moodPointsCalc = 0;
+                for (const result of jsonResponse.result) {
+                    if (result.mood == 0) { //happy
+                        moodLevelCalc += 10; //positive change in mood level
+                        moodPointsCalc += 2
+                    } else if (result.mood == 1) { //neutral
+                        moodLevelCalc += 0; //no change in mood level
+                        moodPointsCalc += 5
+                    } else { //unhappy
+                        moodLevelCalc -= 10; //negative change in mood level
+                        moodPointsCalc += 7
+                    }
+                }
+                //update state
+                setMoodLevel(moodLevelCalc);
+                //get wellness task if moodcheckpoint > 10 from current point calc
+                if (moodPointsCalc - moodCheckPoint > 10) {
+                    fetchWellnessActivities();
+                } else {
+                    fadeOut();
+                    setWellnessTasks([])
+                }
+            }
+        })
+        .catch((err) => {
+            console.error('Fetch error:', err);
+        });
+    }
+
+    //fetch wellness tasks
+    function fetchWellnessActivities() {
+        let url = process.env.EXPO_PUBLIC_API_URL + 'api/wellness/get-wellness'; 
+        fetch(url, {
+            method: 'GET',
+            mode: 'cors',
+            cache: 'no-cache',
+            credentials: 'same-origin',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'authorization' : accessToken
+            },
+            redirect: 'follow',
+            referrer: 'client',
+        })
+        .then((response) => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                Alert.alert('unkown error occurred');
+            }
+        })
+        .then(async (jsonResponse) => {
+            if (jsonResponse !== undefined) {
+                const wellnessTasks = jsonResponse.result.map(task => ({
+                    id: task.id,
+                    title: task.title,
+                    description: task.description
+                }));
+                setWellnessTasks(wellnessTasks);     
+                fadeIn();
             }
         })
         .catch((err) => {
@@ -295,216 +381,88 @@ export default function DayTasksScreen({ navigation: { navigate }, route }){
     }
 
 
+    // set up pop up toggle functions
     //toggle function for todo task pop up modal
     function toggleMoreOptionsToDo () {
         setmoreOptionsVisibleToDo(!moreOptionsVisibleToDo);
     };
-    
-    //pop up modal for todo tasks 
-    function MoreOptionsPopUpToDo() {
-        //process data strings
-        let popUpTitle = toDoTasks[selectedToDoTaskIndex]?.task_title;
-        let popUpStartTime = toDoTasks[selectedToDoTaskIndex]?.start_time;
-        let popUpEndTime = toDoTasks[selectedToDoTaskIndex]?.end_time;
-        let popUpTime = popUpStartTime?.substring(0, popUpStartTime.length - 3) + ' - ' + popUpEndTime?.substring(0, popUpEndTime.length - 3)
-        let popUpDescription = toDoTasks[selectedToDoTaskIndex]?.task_description;
-
-        return (
-            <Modal isVisible={moreOptionsVisibleToDo}>
-                <View style={[styles.flex1, styles.columnFlex]}>
-                    <View style={[styles.flex1]}/>
-                    
-                    <View style={[styles.flex3, styles.backgroundWhite, styles.borderRadius20, styles.paddingAll20]}>
-                        <View style={[styles.flex1, styles.justifyHorizontalEnd]}>
-                            <TouchableOpacity style={[styles.flex1, styles.justifyHorizontalCenter, styles.justifyVerticalCenter]} onPress={() => toggleMoreOptionsToDo()}>
-                                <MaterialCommunityIcons name="close-circle-outline" size={height/25} color="black" />
-                            </TouchableOpacity>
-                        </View>
-                        <View style={[styles.flex1]}>
-                            <Text style={[styles.text20, styles.textAlignCenter, styles.fontBold, styles.backgroundBlue, styles.colourWhite]} >Title</Text>
-                        </View>
-                        <View style={[styles.flex1]}>
-                            <Text style={[styles.text15, styles.textAlignCenter, styles.fontBold]} >{popUpTitle} </Text>
-                        </View>
-                        <View style={[styles.flex1]}>
-                            <Text style={[styles.text20, styles.textAlignCenter, styles.fontBold, styles.backgroundBlue, styles.colourWhite]} >Time</Text>
-                        </View>
-                        <View style={[styles.flex1]}>
-                            <Text style={[styles.text15, styles.textAlignCenter, styles.fontBold]} >{popUpTime} </Text>
-                        </View>
-                        <View style={[styles.flex1]}>
-                            <Text style={[styles.text20, styles.textAlignCenter, styles.fontBold, styles.backgroundBlue, styles.colourWhite]} >Description</Text>
-                        </View>
-                        <View style={[styles.flex3]}>
-                            <ScrollView style={[styles.flex1]}>
-                                <Text style={[styles.text15, styles.textAlignLeft, styles.paddingLeftRight10, styles.fontBold]} > {popUpDescription} </Text>
-                            </ScrollView>
-                        </View>
-                        <View style={[styles.flex2, styles.rowFlex]}>
-                            <TouchableOpacity 
-                                style={[styles.flex1, styles.columnFlex, styles.justifyHorizontalCenter, styles.justifyVerticalCenter]}
-                                onPress= {() => {
-                                    navigate('ManageTasksScreen', { 
-                                        selectedDate: route.params.selectedDate, 
-                                        title: toDoTasks[selectedToDoTaskIndex]?.task_title,
-                                        taskDescription: toDoTasks[selectedToDoTaskIndex]?.task_description,
-                                        startTime: toDoTasks[selectedToDoTaskIndex]?.start_time,
-                                        endTime: toDoTasks[selectedToDoTaskIndex]?.end_time,
-                                        task_id: selectedItemId
-                                    });
-                                    toggleMoreOptionsToDo();
-                                    }
-                                }
-                            >
-                                <View style={[styles.flex3]}>
-                                    <MaterialCommunityIcons name="pencil-circle-outline" size={height/15} color="green" />
-                                </View>
-                                <View style={[styles.flex1]}>
-                                    <Text style={[styles.text15, styles.textAlignCenter, styles.fontBold]} >Edit</Text>
-                                </View>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={[styles.flex1, styles.columnFlex, styles.justifyHorizontalCenter, styles.justifyVerticalCenter]} onPress={() => submitDeleteTask()}>
-                                <View style={[styles.flex3]}>
-                                    <MaterialCommunityIcons name="delete-circle-outline" size={height/15} color="red" />
-                                </View>
-                                <View style={[styles.flex1]}>
-                                    <Text style={[styles.text15, styles.textAlignCenter, styles.fontBold]} >Delete</Text>
-                                </View>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-
-                    <View style={[styles.flex1]}/>
-                </View>
-            </Modal>
-        )
-    }
 
     //toggle function for complete task pop up modal
     function toggleMoreOptionsCompleted () {
         setMoreOptionsVisibleCompleted(!moreOptionsVisibleCompleted);
     };
-    
-    //pop up modal for complete task
-    function MoreOptionsPopUpCompleted() {
-        //process data strings
-        let popUpTitle = completedTasks[selectedCompletedTaskIndex]?.task_title;
-        let popUpStartTime = completedTasks[selectedCompletedTaskIndex]?.start_time;
-        let popUpEndTime = completedTasks[selectedCompletedTaskIndex]?.end_time;
-        let popUpTime = popUpStartTime?.substring(0, popUpStartTime.length - 3) + ' - ' + popUpEndTime?.substring(0, popUpEndTime.length - 3)
-        let popUpDescription = completedTasks[selectedCompletedTaskIndex]?.task_description;
-
-        return (
-            <Modal isVisible={moreOptionsVisibleCompleted}>
-                <View style={[styles.flex1, styles.columnFlex]}>
-                    <View style={[styles.flex2]}/>
-                    <View style={[styles.flex3, styles.backgroundWhite, styles.borderRadius20, styles.paddingAll20]}>
-                        <View style={[styles.flex1, styles.justifyHorizontalEnd]}>
-                            <TouchableOpacity style={[styles.flex1, styles.justifyHorizontalCenter, styles.justifyVerticalCenter]} onPress={() => toggleMoreOptionsCompleted()}>
-                                <MaterialCommunityIcons name="close-circle-outline" size={height/25} color="black" />
-                            </TouchableOpacity>
-                        </View>
-                        <View style={[styles.flex1]}>
-                            <Text style={[styles.text20, styles.textAlignCenter, styles.fontBold, styles.backgroundBlue, styles.colourWhite]} >Title</Text>
-                        </View>
-                        <View style={[styles.flex1]}>
-                            <Text style={[styles.text15, styles.textAlignCenter, styles.fontBold]} >{popUpTitle} </Text>
-                        </View>
-                        <View style={[styles.flex1]}>
-                            <Text style={[styles.text20, styles.textAlignCenter, styles.fontBold, styles.backgroundBlue, styles.colourWhite]} >Time</Text>
-                        </View>
-                        <View style={[styles.flex1]}>
-                            <Text style={[styles.text15, styles.textAlignCenter, styles.fontBold]} >{popUpTime} </Text>
-                        </View>
-                        <View style={[styles.flex1]}>
-                            <Text style={[styles.text20, styles.textAlignCenter, styles.fontBold, styles.backgroundBlue, styles.colourWhite]} >Description</Text>
-                        </View>
-                        <View style={[styles.flex3]}>
-                            <ScrollView style={[styles.flex1]}>
-                                <Text style={[styles.text15, styles.textAlignLeft, styles.paddingLeftRight10, styles.fontBold]} >{popUpDescription} </Text>
-                            </ScrollView>
-                        </View>
-                        <View style={[styles.flex2, styles.rowFlex]}>
-                            <TouchableOpacity style={[styles.flex1, styles.justifyHorizontalCenter, styles.justifyVerticalCenter]}>
-                            <Button
-                                title="Undo Complete"
-                                color="red"
-                                onPress={() =>submitUndoComplete()}
-                            />
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                    <View style={[styles.flex1]}/>
-                </View>
-            </Modal>
-        )
-    }
 
     //toggle function for complete task pop up modal
     function toggleCompleteTask() {
         setToggleComplete(!toggleComplete);
     };
-    
-    //pop up modal for todo tasks 
-    function CompleteTaskPopUp() {
-        //process data strings
-        let popUpTitle = toDoTasks[selectedToDoTaskIndex]?.task_title;
 
-        return (
-            <Modal isVisible={toggleComplete}>
-                <View style={[styles.flex1, styles.columnFlex]}>
-                    <View style={[styles.flex1]}/>
-                    <View style={[styles.flex1, styles.backgroundWhite, styles.borderRadius20, styles.paddingAll20]}>
-                        <View style={[styles.flex1, styles.justifyHorizontalEnd]}>
-                            <TouchableOpacity style={[styles.flex1, styles.justifyHorizontalCenter, styles.justifyVerticalCenter]} onPress={() => toggleCompleteTask()}>
-                                <MaterialCommunityIcons name="close-circle-outline" size={height/25} color="black" />
-                            </TouchableOpacity>
-                        </View>
-                        <View style={[styles.flex1]}>
-                            <Text style={[styles.text20, styles.textAlignCenter, styles.fontBold, styles.backgroundBlue, styles.colourWhite]} >Title</Text>
-                        </View>
-                        <View style={[styles.flex1]}>
-                            <Text style={[styles.text20, styles.textAlignCenter, styles.fontBold]} >{popUpTitle}</Text>
-                        </View>
-                        <View style={[styles.flex1]}>
-                            <Text style={[styles.text20, styles.textAlignCenter, styles.fontBold, styles.colourWhite, styles.backgroundBlue]} >Complete with a mood</Text>
-                        </View>
-                        
-                        <View style={[styles.flex2, styles.rowFlex]}>
-                            <TouchableOpacity style={[styles.flex1, styles.justifyHorizontalCenter, styles.justifyVerticalTop]} onPress={() => submitCompleteTask(0)}>
-                                <MaterialCommunityIcons name="emoticon-happy-outline" size={height/12} color="green" />
-                            </TouchableOpacity>
-                            <TouchableOpacity style={[styles.flex1, styles.justifyHorizontalCenter, styles.justifyVerticalTop]} onPress={() => submitCompleteTask(1)}>
-                                <MaterialCommunityIcons name="emoticon-neutral-outline" size={height/12} color="orange" />
-                            </TouchableOpacity>
-                            <TouchableOpacity style={[styles.flex1, styles.justifyHorizontalCenter, styles.justifyVerticalTop]} onPress={() => submitCompleteTask(2)}>
-                                <MaterialCommunityIcons name="emoticon-sad-outline" size={height/12} color="red" />
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                    <View style={[styles.flex1]}/>
-                </View>
-            </Modal>
-        )
+    //toggle function for wellness pop up modal
+    function toggleWellnessTask() {
+        setToggleWellness(!toggleWellness);
     }
     
-
 
     return (
         <SafeAreaView style={styles.container}>
             <View style={[styles.mainView, styles.columnFlex]}>
 
                 {/*Top half  */}
-                <View style={[styles.flex3]}>
+                <View style={[styles.flex3, styles.paddingAll15]}>
                     <View style={[styles.flex1]}>
+                        <MoodMeter
+                            size={height * (3/7)}
+                            width={(height / 9) }
+                            moodLevel={moodLevel}
+                        >
 
+                            {
+                                (moodLevel) => (
+                                <Text>
+                                    { moodLevel }
+                                </Text>
+                                )
+                            }
+                        </MoodMeter>
                     </View>
                 </View>
 
                 {/* pop up modals */}
-                {MoreOptionsPopUpToDo()}
-                {MoreOptionsPopUpCompleted()}
-                {CompleteTaskPopUp()}
+                <ToDoTaskModal
+                    isVisible={moreOptionsVisibleToDo}
+                    toggleModal={toggleMoreOptionsToDo}
+                    task={toDoTasks[selectedToDoTaskIndex]}
+                    onEdit={task => {
+                        navigate('ManageTasksScreen', { 
+                            selectedDate: route.params.selectedDate, 
+                            title: task.task_title,
+                            taskDescription: task.task_description,
+                            startTime: task.start_time,
+                            endTime: task.end_time,
+                            task_id: selectedItemId
+                        });
+                    }}
+                    onDelete={submitDeleteTask}
+                />
+                <CompletedTaskModal
+                    isVisible={moreOptionsVisibleCompleted}
+                    toggleModal={toggleMoreOptionsCompleted}
+                    completedTasks={completedTasks[selectedCompletedTaskIndex]}
+                    submitUndoComplete={submitUndoComplete}
+                />
+                <CompleteToDoTaskModal
+                    isVisible={toggleComplete}
+                    toggleModal={toggleCompleteTask}
+                    submitCompleteTask={submitCompleteTask}
+                    toDoTasks={toDoTasks[selectedToDoTaskIndex]}
+                />
+
+                <WellnessTaskModal
+                    isVisible={toggleWellness}
+                    toggleModal={toggleWellnessTask}
+                    submitCompleteWellness={() => console.log ('test')}
+                    wellnessTasks={wellnessTasks[wellnessTaskNumber]}
+                />
                 
                 {/* bottom half */}
                 <View style={[styles.flex7, styles.backgroundBlue]}>
@@ -525,6 +483,21 @@ export default function DayTasksScreen({ navigation: { navigate }, route }){
                             (toDoTasks.length > 0 || completedTasks.length > 0) ? (
                                 <React.Fragment>
                                     <Text  style={[styles.text20, styles.textAlignCenter, styles.fontBold, styles.paddingTopBottom20]} >To Do</Text>
+                                    {wellnessTasks.map((resp, index) => (
+                                        wellnessTaskNumber == index?
+                                        <Animated.View style={{ opacity: fadeAnimation }}>
+                                            <AcitivityWellnessRow
+                                                key={'activitywellnessrow' + index}
+                                                props={{
+                                                        onPress: () => {
+                                                            toggleWellnessTask();
+                                                        },
+                                                        title: resp.title
+                                                    }}
+                                                />
+                                            </Animated.View> :
+                                            <></>
+                                    ))}
                                     {toDoTasks.map((resp, index) => (
                                         <ActivityRowNotChecked
                                             key={'activityrow' + index}

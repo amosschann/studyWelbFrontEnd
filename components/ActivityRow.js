@@ -18,7 +18,7 @@ onPress - onPress action for whole row
 */
 export function ActivityRowStatic ({props}) {
     return (
-        <TouchableOpacity style={[styles.flex1, styles.rowFlex, styles.marginTop5, styles.backgroundLightBlue, {height: height/ 9}]}>
+        <View style={[styles.flex1, styles.rowFlex, styles.marginTop5, styles.backgroundLightBlue, {height: height/ 9}]}>
             {/* Activity */}
             <View style={[styles.flex1]}/>
             <View style={[styles.flex5 ,styles.justifyHorizontalStart, styles.justifyVerticalCenter]}>
@@ -29,7 +29,7 @@ export function ActivityRowStatic ({props}) {
             <View style={[styles.flex3, styles.justifyHorizontalStart, styles.justifyVerticalCenter]}>
                 <Text style={[styles.text15, styles.fontBold]}>{props.time}</Text>
             </View>
-        </TouchableOpacity>
+        </View>
     )
 };
 
@@ -91,6 +91,23 @@ export function ActivityRowChecked ({props}) {
                 <View style={[styles.flex3, styles.justifyHorizontalStart, styles.justifyVerticalCenter]}>
                     <Text style={[styles.text15, styles.paddingLeft10, styles.fontBold]}>{props.time}</Text>
                 </View>
+            </View>
+        </TouchableOpacity>
+    )
+};
+
+// activity wellness row - with touch functions
+/*
+props:
+title - wellness task title
+onPress - onPress action for whole row
+*/
+export function AcitivityWellnessRow ({props}) {
+    return (
+        <TouchableOpacity style={[styles.flex1, styles.marginTop5, styles.backgroundGreen, {height: height/ 9}]} onPress={props.onPress}>
+            <View style={[styles.flex4, styles.justifyVerticalCenter, styles.justifyHorizontalCenter]}>
+                <Text style={[styles.text15, styles.textAlignLeft, styles.colourWhite, styles.paddingBottom10]}>Start a Wellness Activity</Text>
+                <Text style={[styles.text15, styles.textAlignLeft, styles.colourWhite, styles.fontBold]}>{props.title}</Text>
             </View>
         </TouchableOpacity>
     )
