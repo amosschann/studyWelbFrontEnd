@@ -81,7 +81,7 @@ export default function SignUpScreen ({ navigation }){
         <SafeAreaView style={styles.container}>
             <KeyboardAvoidingView
                 style={styles.container}
-                behavior="position"
+                behavior={Platform.OS === 'ios' ? 'position' : 'height'}
             >
             <TouchableWithoutFeedback 
                 onPress={Keyboard.dismiss} 

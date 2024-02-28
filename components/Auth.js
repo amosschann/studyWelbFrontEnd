@@ -3,6 +3,13 @@ import { getAccessToken, fetchValidTokenCheck } from '../helpers/AccessTokenHelp
 
 const AuthContext = createContext();
 
+/**
+ * authentication provider component
+ * 
+ * @component
+ * @param {object} props - component props
+ * @param {ReactNode} props.children - the child components wrapped by the AuthProvider
+ */
 export function Auth({ children }) {
   const [signedIn, setsignedIn] = useState(false);
 

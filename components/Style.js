@@ -128,6 +128,9 @@ const styles = StyleSheet.create({
     backgroundGreen: {
       backgroundColor: '#20867F'
     },
+    backgroundLightGreen: {
+      backgroundColor: '#f3fff3'
+    },
     //colur
     colourWhite: {
       color: 'white'

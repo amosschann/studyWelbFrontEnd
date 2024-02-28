@@ -179,8 +179,6 @@ export default function HomeScreen({ navigation: { navigate }, props }){
         })
         .then((jsonResponse) => {
             if (jsonResponse !== undefined) {
-                console.log(jsonResponse);
-        
                 //placeholders for state updates
                 let newMarkedDates = {};
                 let newMarkedDatesArray = [];
@@ -204,7 +202,6 @@ export default function HomeScreen({ navigation: { navigate }, props }){
                         [taskDate]: taskId,
                     };
                 }
-        
                 //update states after the loop
                 setMarkedDates((prevMarkedDates) => ({ ...prevMarkedDates, ...newMarkedDates }));
                 setMarkedDatesArray((prevMarkedDates) => [...prevMarkedDates, ...newMarkedDatesArray]);
@@ -247,7 +244,6 @@ export default function HomeScreen({ navigation: { navigate }, props }){
         })
         .then(async (jsonResponse) => {
             if (jsonResponse !== undefined) {
-                console.log(jsonResponse)
                 setTasks(jsonResponse.result)
             
             }
@@ -288,7 +284,6 @@ export default function HomeScreen({ navigation: { navigate }, props }){
         })
         .then(async (jsonResponse) => {
             if (jsonResponse !== undefined) {
-                console.log(jsonResponse.result[0].journalCount)
                 if (jsonResponse.result[0].journalCount > 0) {
                     setJournalAvailable(true);
                 } else {
@@ -302,10 +297,6 @@ export default function HomeScreen({ navigation: { navigate }, props }){
             console.error('Fetch error:', err);
         });
     }
-
-
-
-
 
     return (
         
@@ -374,45 +365,26 @@ export default function HomeScreen({ navigation: { navigate }, props }){
                     </View>
                     <View style={[styles.flex6, styles.backgroundWhite]}>
                     <ScrollView style={[styles.flex1]}>
-                        {/* <ActivityRowStatic
-                                    props={{
-                                    onPress: () => console.log('hello'),
-                                    activity: 'testt',
-                                    time: 'test time'
-                                }}
-                        />
-                        <ActivityRowNotChecked
-                            props={{
-                                    onPress: () => console.log('hello'),
-                                    onPressCheck: () => console.log('hey'),
-                                    activity: 'testt',
-                                    time: 'test time'
-                                }}
-                        />
-                        <ActivityRowChecked
-                            props={{
-                                    onPress: () => console.log('hello'),
-                                    activity: 'testt',
-                                    time: 'test time'
-                                }}
-                        /> */}
                         {
-                            tasks.length > 0 ?
+                            tasks.length > 0 ? //dont show welleness tasks 
                             tasks.map((resp, index) => (
+                                resp.wellnessCheckpoint  == 0?
                                 <ActivityRowStatic
                                     key={'activityrow' + index}
                                     props={{
-                                            onPress: () => console.log('hello'),
                                             activity: resp.task_title,
                                             time: resp.start_time.substring(0, resp.start_time.length-3) 
                                             + " - " 
                                             + resp.end_time.substring(0, resp.start_time.length-3),
                                         }}
                                     />
-                            )) : 
+                                    :
+                                    <></>
+                            )) 
+                            : 
                             <ActivityRowStatic
+                                    key={'noactivityrow'}
                                     props={{
-                                    onPress: () => console.log('hello'),
                                     activity: 'no tasks for the day',
                                     time: 'add a task'
                                 }}

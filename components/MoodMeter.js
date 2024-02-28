@@ -7,6 +7,14 @@ import { Svg, Path, G, Polygon } from 'react-native-svg';
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 const AnimatedG = Animated.createAnimatedComponent(G)
 
+/** compoenent for Mood Meter 
+ * torn down and repurposed from - https://github.com/bartgryszko/react-native-circular-progress/blob/master/src/AnimatedCircularProgress.js
+ * removed unneccessary props / variables / components
+ * new 4 parts of ellipse 
+ * new needle 
+ * new animation handling
+ * new angle handling 
+ */
 export default class MoodMeter extends React.PureComponent {
     //define states for circle quad opacity levels
     constructor(props) {
@@ -278,6 +286,22 @@ export default class MoodMeter extends React.PureComponent {
 
 }
 
+/**
+ * prop types for MoodMeter component
+ * 
+ * @component
+ * @param {object} props - component props
+ * @param {object} props.style - style object
+ * @param {number | Animated.Value} props.size - size entire mood meter (calc radius etc)
+ * @param {number} props.moodLevel - mood level
+ * @param {number} props.width - width of the mood meter
+ * @param {number} props.backgroundWidth - width of the background
+ * @param {boolean} props.tintTransparency - transparency of the tint
+ * @param {number} props.rotation - rotation angle
+ * @param {function} props.children - children function
+ * @param {object} props.childrenContainerStyle - style object for children container
+ * @param {number} props.padding - padding value
+ */
 MoodMeter.propTypes = {
   style: PropTypes.object,
   size: PropTypes.oneOfType([
@@ -294,6 +318,7 @@ MoodMeter.propTypes = {
   padding: PropTypes.number,
 };
 
+//defaul values
 MoodMeter.defaultProps = {
   tintColor: 'black',
   tintTransparency: true,
@@ -301,6 +326,4 @@ MoodMeter.defaultProps = {
   lineCap: 'butt',
   arcSweepAngle: 180,
   padding: 0,
-  dashedBackground: { width: 0, gap: 0 },
-  dashedTint: { width: 0, gap: 0 },
 };

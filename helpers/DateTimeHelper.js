@@ -1,23 +1,14 @@
+import { format, parseISO } from 'date-fns';
 
 // convert date from db to dd/mm/yy format
 export function localiseAndFormatDBDate(inputDateStr) {
-    const localDate = new Date(inputDateStr).toLocaleDateString();
-
-    const parts = localDate.split('/');
-    const day = parseInt(parts[0], 10);
-    const month = parseInt(parts[1], 10) - 1;
-    const year = parseInt(parts[2], 10);
-
-    const parsedDate = new Date(year, month, day);
-
-    //final format
-    const formattedDate = `${parsedDate.getFullYear()}-${(parsedDate.getMonth() + 1).toString().padStart(2, '0')}-${parsedDate.getDate().toString().padStart(2, '0')}`;
-
+    const parsedDate = parseISO(inputDateStr);
+    const options = { timeZone: 'UTC' };
+    const formattedDate = format(parsedDate, 'yyyy-MM-dd', options);
     return formattedDate;
-
 }
 
-
+//converts datestring to format that can be saved in db
 export function convertDateTimeToDBTimeFormat(inputDateStr) {
     const date = new Date(inputDateStr);
 
@@ -31,3 +22,11 @@ export function convertDateTimeToDBTimeFormat(inputDateStr) {
 
     return timeString;
 }
+
+//formats the time for date time picker (android)
+export function formatTime(time) {
+    console.log(time)
+    const hour = ('0' + time.getHours()).slice(-2);
+    const minute = ('0' + time.getMinutes()).slice(-2);
+    return `${hour}:${minute}`;
+  };

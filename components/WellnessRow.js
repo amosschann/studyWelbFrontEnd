@@ -3,12 +3,15 @@ import { Text, View, Dimensions, TouchableOpacity } from 'react-native';
 import styles from './Style';
 const { height, width } = Dimensions.get('screen');
 
-//Wellness Row - comes with flex row below (space)
-/*
-props:
-wellness - wellness data for title and description
-onPress - onPress action for whole row
-*/
+/**
+ * wellness Row - comes with flex row below (space)
+ * 
+ * @component
+ * @param {object} props - component props
+ * @param {object} props.wellness - wellness data for title and description
+ * @param {function} props.onPress - onPress action for whole row
+ */
+
 export function WellnessRow ({props}) {
     return (
         <>

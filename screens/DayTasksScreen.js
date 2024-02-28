@@ -2,10 +2,8 @@ import React, { useEffect, useState, useRef  } from 'react';
 import { Animated, Easing, Alert, SafeAreaView, ScrollView, Text, TouchableOpacity, View, Button, Dimensions } from 'react-native';
 import styles from '../components/Style';
 import { getAccessToken } from '../helpers/AccessTokenHelper';
-import { AcitivityWellnessRow, ActivityRowChecked, ActivityRowNotChecked, ActivityRowStatic } from '../components/ActivityRow';
+import { AcitivityWellnessRow, AcitivityWellnessRowComplete, ActivityRowChecked, ActivityRowNotChecked, ActivityRowStatic } from '../components/ActivityRow';
 import { useNavigationState } from '@react-navigation/native';
-import Modal from "react-native-modal";
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 const { height, width } = Dimensions.get('screen');
 import * as Haptics from 'expo-haptics';
 import MoodMeter from '../components/MoodMeter';
@@ -24,11 +22,17 @@ export default function DayTasksScreen({ navigation: { navigate }, route }){
     const [selectedCompletedTaskIndex, setSelectedCompletedTaskIndex] = useState('default');
     const [toggleComplete, setToggleComplete] = useState(false);
     const [fetchTriggerCompletedTask, setfetchTriggerCompletedTask] = useState('')
+
+    //for calculating needle position
     const [moodLevel, setMoodLevel] = useState(50);
-    const [moodCheckPoint, setMoodCheckPoint] = useState(0);
+    //for calculating wellness prompt
+    const [currentMoodPoint, setCurrentMoodPoint] = useState(0)
+
     const [wellnessTaskNumber, setWellnessTaskNumber] = useState(Math.floor(Math.random() * 5))
     const fadeAnimation = useRef(new Animated.Value(0)).current;
     const [toggleWellness, setToggleWellness] = useState(false);
+    const [started, setStarted] = useState(false);
+    const [progressFill, setProgressFill] = useState(0);
       
     //access token
     useEffect(() => {
@@ -163,20 +167,32 @@ export default function DayTasksScreen({ navigation: { navigate }, route }){
                 //calculation for mood 
                 let moodLevelCalc = 50;
                 let moodPointsCalc = 0;
+                let moodCheckPoint = 0; //better to update here and use to check against as useState takes time to render
                 for (const result of jsonResponse.result) {
-                    if (result.mood == 0) { //happy
+                    if (result.mood == 0 && result.wellnessCheckpoint !== 0) { //happy & wellness
+                        moodLevelCalc += 20; //positive change in mood level
+                        moodPointsCalc += 0
+                    } else if (result.mood == 0) { //happy
                         moodLevelCalc += 10; //positive change in mood level
                         moodPointsCalc += 2
                     } else if (result.mood == 1) { //neutral
                         moodLevelCalc += 0; //no change in mood level
-                        moodPointsCalc += 5
-                    } else { //unhappy
+                        moodPointsCalc += 4
+                    } else { //sad
                         moodLevelCalc -= 10; //negative change in mood level
-                        moodPointsCalc += 7
+                        moodPointsCalc += 6
+                    }
+                    //check last checkpoint wellness (if any)
+                    if (result.wellnessCheckpoint !== 0) {
+                        if (result.wellnessCheckpoint  >= moodCheckPoint) {
+                            moodCheckPoint = result.wellnessCheckpoint;
+                        }
                     }
                 }
-                //update state
+                //update state 
                 setMoodLevel(moodLevelCalc);
+                setCurrentMoodPoint(moodPointsCalc);
+                console.log (moodPointsCalc,  moodCheckPoint)
                 //get wellness task if moodcheckpoint > 10 from current point calc
                 if (moodPointsCalc - moodCheckPoint > 10) {
                     fetchWellnessActivities();
@@ -230,7 +246,7 @@ export default function DayTasksScreen({ navigation: { navigate }, route }){
         });
     }
 
-    //Submit Delete Task 
+    //submit post request to delete task
     function submitDeleteTask() {
         let url = process.env.EXPO_PUBLIC_API_URL + 'api/tasks/delete-task';
 
@@ -280,6 +296,7 @@ export default function DayTasksScreen({ navigation: { navigate }, route }){
 
     }
 
+    //submit post request to submit task completion 
     function submitCompleteTask(mood) {
         let url = process.env.EXPO_PUBLIC_API_URL + 'api/tasks/complete-task';
 
@@ -331,6 +348,7 @@ export default function DayTasksScreen({ navigation: { navigate }, route }){
         });
     }
 
+    //submit post request to undo complete
     function submitUndoComplete() {
         let url = process.env.EXPO_PUBLIC_API_URL + 'api/tasks/undo-complete-task';
 
@@ -380,6 +398,61 @@ export default function DayTasksScreen({ navigation: { navigate }, route }){
         });
     }
 
+    //submit wellness complete
+    function submitCompleteWellnessTask() {
+        let url = process.env.EXPO_PUBLIC_API_URL + 'api/tasks/complete-wellness-task';
+
+        let postData = {
+            'title': wellnessTasks[wellnessTaskNumber].title,
+            'taskDescription' : wellnessTasks[wellnessTaskNumber].description,
+            'date': route.params.selectedDate,
+            'wellnessCheckpoint': currentMoodPoint
+        };
+
+        fetch(url, {
+            method: 'POST',
+            mode: 'cors',
+            cache: 'no-cache',
+            credentials: 'same-origin',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'authorization' : accessToken
+            },
+            redirect: 'follow',
+            referrer: 'client',
+            body: JSON.stringify(postData)
+        })
+        .then((response) => {
+            if (response.ok) {
+                return response.json();
+            } else if (response.status === 500) {
+                return response.json().then((error) => {
+                    Alert.alert( error.message);
+                });
+            } else {
+                Alert.alert('unkown error occurred');
+                console.log(response)
+            }
+        })
+        .then((jsonResponse) => {
+            if (jsonResponse !== undefined) {
+
+                Haptics.notificationAsync(
+                    Haptics.NotificationFeedbackType.Success
+                );
+                //refetch todo tasks, completed tasks and close modal
+                fetchToDoTasks();
+                fetchCompletedTasks();
+                toggleWellnessTask();
+            }
+        })
+        .catch((err) => {
+            console.error('Fetch error:', err);
+        });
+    }
+
+
 
     // set up pop up toggle functions
     //toggle function for todo task pop up modal
@@ -400,8 +473,15 @@ export default function DayTasksScreen({ navigation: { navigate }, route }){
     //toggle function for wellness pop up modal
     function toggleWellnessTask() {
         setToggleWellness(!toggleWellness);
+        //reset wellness bar 
+        setStarted(false);
+        setProgressFill(0);
     }
     
+    //toogle function for wellness started in pop up modal
+    function toggleStarted() {
+        setStarted(!started);
+    }
 
     return (
         <SafeAreaView style={styles.container}>
@@ -460,8 +540,12 @@ export default function DayTasksScreen({ navigation: { navigate }, route }){
                 <WellnessTaskModal
                     isVisible={toggleWellness}
                     toggleModal={toggleWellnessTask}
-                    submitCompleteWellness={() => console.log ('test')}
+                    submitCompleteWellness={submitCompleteWellnessTask}
                     wellnessTasks={wellnessTasks[wellnessTaskNumber]}
+                    toggleStarted={toggleStarted}
+                    started={started}
+                    progressFill={progressFill}
+                    setProgressFill={setProgressFill}
                 />
                 
                 {/* bottom half */}
@@ -521,8 +605,9 @@ export default function DayTasksScreen({ navigation: { navigate }, route }){
                                     ))}
                                     <Text  style={[styles.text20, styles.textAlignCenter, styles.fontBold, styles.paddingTop40Bottom20]} >Completed</Text>
                                     {completedTasks.map((resp, index) => (
+                                        resp.wellnessCheckpoint  == 0?
                                         <ActivityRowChecked
-                                            key={'activityrow' + index}
+                                            key={'activityrowComplete' + index}
                                             props={{
                                                 onPress: () => {
                                                     toggleMoreOptionsCompleted();
@@ -536,10 +621,19 @@ export default function DayTasksScreen({ navigation: { navigate }, route }){
                                                     resp.end_time.substring(0, resp.start_time.length - 3)
                                             }}
                                         />
+                                        :
+                                        <AcitivityWellnessRowComplete
+                                            key={'activityrowWComplete' + index}
+                                            props={{
+                                                activity: resp.task_title,
+                                                mood: resp.mood,
+                                            }}
+                                        />
                                     ))}
                                 </React.Fragment>
                             ) : (
                                 <ActivityRowStatic
+                                    key={'noactivityrow'}
                                     props={{
                                         onPress: () => console.log('hello'),
                                         activity: 'no tasks for the day',

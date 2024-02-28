@@ -158,7 +158,7 @@ export default function WellnessScreen({ navigation: { navigate }, props }){
         <SafeAreaView style={styles.container} >
             <KeyboardAvoidingView
                 style={styles.container}
-                behavior="position"
+                behavior={Platform.OS === 'ios' ? 'position' : 'height'}
             >
                 {MoreOptionsPopUpToDo()}
                 <View style={[styles.mainView, styles.columnFlex]}>

@@ -4,7 +4,7 @@ import styles from '../components/Style';
 import * as Haptics from 'expo-haptics';
 import { SubmitButton } from '../components/Buttons';
 import RNDateTimePicker from '@react-native-community/datetimepicker';
-import { convertDateTimeToDBTimeFormat } from '../helpers/DateTimeHelper';
+import { convertDateTimeToDBTimeFormat, formatTime } from '../helpers/DateTimeHelper';
 import { getAccessToken } from '../helpers/AccessTokenHelper';
 
 export default function AddTasksScreen ({ navigation: { goBack }, route }){
@@ -13,6 +13,8 @@ export default function AddTasksScreen ({ navigation: { goBack }, route }){
     const [taskDescription, setTaskDescription] = useState('');
     const [startTime, setStartTime] = useState(new Date());
     const [endTime, setEndTime] = useState(new Date());
+    const [showDTP1, setShowDTP1] = useState(false);
+    const [showDTP2, setShowDTP2] = useState(false);
 
 
     //access token
@@ -90,7 +92,7 @@ export default function AddTasksScreen ({ navigation: { goBack }, route }){
         <SafeAreaView style={styles.container} >
             <KeyboardAvoidingView
                 style={styles.container}
-                behavior="position"
+                behavior={Platform.OS === 'ios' ? 'position' : 'height'}
             >
             <TouchableWithoutFeedback 
                 onPress={Keyboard.dismiss} 
@@ -127,7 +129,7 @@ export default function AddTasksScreen ({ navigation: { goBack }, route }){
                                 </View>
                                 <View style={[styles.paddingLeftRight10,]}>
                                     <TextInput
-                                        style={[styles.flex1, styles.text15]}
+                                        style={[styles.text15]}
                                         placeholder="add a title"
                                         placeholderTextColor="gray"
                                         maxLength={50}
@@ -146,7 +148,7 @@ export default function AddTasksScreen ({ navigation: { goBack }, route }){
                                 </View>
                                 <View style={[styles.paddingLeftRight10,]}>
                                     <TextInput
-                                        style={[styles.flex1, styles.text15]}
+                                        style={[styles.text15]}
                                         placeholder="Add a description"
                                         placeholderTextColor="gray"
                                         maxLength={255}
@@ -158,6 +160,7 @@ export default function AddTasksScreen ({ navigation: { goBack }, route }){
                         </View>
 
                         <View style={[styles.flex1]}/>
+
                         <View style={[styles.flex8, styles.columnFlex, styles.paddingLeftRight10, styles.backgroundBlue]}>
                             <View style={[styles.flex3, styles.rowFlex, styles.backgroundWhite, styles.borderRadiusTop10]}>
                                 <View style={[styles.flex1, styles.columnFlex]}/>
@@ -165,7 +168,25 @@ export default function AddTasksScreen ({ navigation: { goBack }, route }){
                                         <Text style={[styles.text20, styles.textAlignLeft]}>Start Time </Text>
                                     </View>
                                     <View style={[styles.flex1, styles.justifyVerticalCenter]}>
-                                        <RNDateTimePicker mode="time" value={startTime} onChange={(event, time)=> setStartTime(time)}/>
+                                        {Platform.OS === "ios"? 
+                                            <RNDateTimePicker mode="time" value={startTime} onChange={(event, time) => setStartTime(time)}/>
+                                        :
+                                            <TouchableOpacity style={[styles.flex1, styles.rowFlex]} onPress={()=> {setShowDTP1(true)}}>
+                                                <View style={[styles.flex1, styles.justifyHorizontalCenter, styles.justifyVerticalCenter, styles.textAlignCenter, styles.marginBottomTop5]}>
+                                                    {
+                                                        showDTP1 && 
+                                                        <RNDateTimePicker mode="time" value={startTime} onChange={(event, time) => {
+                                                            if(event.type=== 'set' ) {
+                                                                setStartTime(time); 
+                                                            } 
+                                                            setShowDTP1(false)
+                                                            }}
+                                                        /> 
+                                                    }
+                                                    <Text style={[styles.text20]}>{formatTime(startTime)}</Text>
+                                                </View>
+                                            </TouchableOpacity>
+                                        }
                                     </View>
                                 <View style={[styles.flex1]}/>
                             </View>
@@ -176,18 +197,32 @@ export default function AddTasksScreen ({ navigation: { goBack }, route }){
                                         <Text style={[styles.text20, styles.textAlignLeft]}>End Time </Text>
                                     </View>
                                     <View style={[styles.flex1, styles.justifyVerticalCenter]}>
-                                    <RNDateTimePicker mode="time" value={endTime} onChange={(event, time)=> setEndTime(time)} minimumDate={startTime}/>
+                                        {Platform.OS === "ios"? 
+                                            <RNDateTimePicker mode="time" value={endTime} onChange={(event, time) => setEndTime(time)} minimumDate={startTime}/>
+                                        :
+                                            <TouchableOpacity style={[styles.flex1, styles.rowFlex]} onPress={()=> {setShowDTP2(true)}}>
+                                                <View style={[styles.flex1, styles.justifyHorizontalCenter, styles.justifyVerticalCenter, styles.textAlignCenter, styles.marginBottomTop5]}>
+                                                    {
+                                                        showDTP2 && 
+                                                        <RNDateTimePicker mode="time" value={endTime} onChange={(event, time) => {
+                                                            if(event.type=== 'set' ) {
+                                                                setEndTime(time); 
+                                                            } 
+                                                            setShowDTP2(false)
+                                                            }}
+                                                        /> 
+                                                    }
+                                                    <Text style={[styles.text20]}>{formatTime(endTime)}</Text>
+                                                </View>
+                                            </TouchableOpacity>
+                                        }
                                     </View>
                                 <View style={[styles.flex1]}/>
                             </View>
-
                         </View>
 
-                        
-
-
-
                         <View style={[styles.flex1]}/>
+                        
                         <View style={[styles.flex3]}>
                             <SubmitButton props={{text: "Submit", onPress: submitAddTask}}/>
                         </View>

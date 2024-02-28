@@ -3,8 +3,6 @@ import { SafeAreaView, View, Alert, TextInput, TouchableOpacity, ImageBackground
 import styles from '../components/Style';
 import * as Haptics from 'expo-haptics';
 import { SubmitButton } from '../components/Buttons';
-import RNDateTimePicker from '@react-native-community/datetimepicker';
-import { convertDateTimeToDBTimeFormat } from '../helpers/DateTimeHelper';
 import { getAccessToken } from '../helpers/AccessTokenHelper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useNavigationState } from '@react-navigation/native';
@@ -95,7 +93,7 @@ export default function JournalScreen ({ navigation: { goBack, navigate }, route
         <SafeAreaView style={styles.container} >
             <KeyboardAvoidingView
                 style={styles.container}
-                behavior="position"
+                behavior={Platform.OS === 'ios' ? 'position' : 'height'}
             >
             
                 <View style={[styles.mainView, styles.columnFlex]}>

@@ -3,8 +3,6 @@ import { SafeAreaView, View, Alert, TextInput, TouchableOpacity, ImageBackground
 import styles from '../components/Style';
 import * as Haptics from 'expo-haptics';
 import { SubmitButton } from '../components/Buttons';
-import RNDateTimePicker from '@react-native-community/datetimepicker';
-import { convertDateTimeToDBTimeFormat } from '../helpers/DateTimeHelper';
 import { getAccessToken } from '../helpers/AccessTokenHelper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 const { height, width } = Dimensions.get('screen');
@@ -110,7 +108,7 @@ export default function ManageJournalScreen ({ navigation: { goBack, navigate },
         <SafeAreaView style={styles.container} >
             <KeyboardAvoidingView
                 style={styles.container}
-                behavior="position"
+                behavior={Platform.OS === 'ios' ? 'position' : 'height'}
             >
             <TouchableWithoutFeedback 
                 onPress={Keyboard.dismiss} 
@@ -152,7 +150,7 @@ export default function ManageJournalScreen ({ navigation: { goBack, navigate },
                             </View>
                             <View style={[styles.paddingLeftRight10]}>
                                 <TextInput
-                                    style={[styles.flex1, styles.text15]}
+                                    style={[styles.text15]}
                                     placeholder="Write 5 things you are grateful about today"
                                     defaultValue={gratitude}
                                     placeholderTextColor="gray"
@@ -173,7 +171,7 @@ export default function ManageJournalScreen ({ navigation: { goBack, navigate },
                             </View>
                             <View style={[styles.paddingLeftRight10]}>
                                 <TextInput
-                                    style={[styles.flex1, styles.text15]}
+                                    style={[styles.text15]}
                                     placeholder="Write about your day here"
                                     defaultValue={general}
                                     placeholderTextColor="gray"
@@ -195,7 +193,7 @@ export default function ManageJournalScreen ({ navigation: { goBack, navigate },
                             </View>
                             <View style={[styles.paddingLeftRight10]}>
                                 <TextInput
-                                    style={[styles.flex1, styles.text15, styles.textAlignCenter]}
+                                    style={[styles.text15, styles.textAlignCenter]}
                                     placeholder="Up to three words to describe your mood"
                                     defaultValue={moodDescription}
                                     placeholderTextColor="gray"
