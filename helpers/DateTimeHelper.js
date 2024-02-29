@@ -1,6 +1,11 @@
 import { format, parseISO } from 'date-fns';
 
-// convert date from db to dd/mm/yy format
+/**
+ * convert date from db to dd/mm/yy format
+ * 
+ * @function
+ * @param {string} inputDateStr - datetime string
+ */
 export function localiseAndFormatDBDate(inputDateStr) {
     const parsedDate = parseISO(inputDateStr);
     const options = { timeZone: 'UTC' };
@@ -8,7 +13,12 @@ export function localiseAndFormatDBDate(inputDateStr) {
     return formattedDate;
 }
 
-//converts datestring to format that can be saved in db
+/**
+ * converts datestring to format that can be saved in db
+ * 
+ * @function
+ * @param {string} inputDateStr - datetime string
+ */
 export function convertDateTimeToDBTimeFormat(inputDateStr) {
     const date = new Date(inputDateStr);
 

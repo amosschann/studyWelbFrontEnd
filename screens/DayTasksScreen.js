@@ -8,6 +8,7 @@ const { height, width } = Dimensions.get('screen');
 import * as Haptics from 'expo-haptics';
 import MoodMeter from '../components/MoodMeter';
 import { CompleteToDoTaskModal, CompletedTaskModal, ToDoTaskModal, WellnessTaskModal } from '../components/PopUps';
+import { calculateMood } from '../helpers/MoodHelper';
 
 export default function DayTasksScreen({ navigation: { navigate }, route }){
     const pageIndex = useNavigationState(state => state.index);
@@ -164,42 +165,8 @@ export default function DayTasksScreen({ navigation: { navigate }, route }){
         .then(async (jsonResponse) => {
             if (jsonResponse !== undefined) {
                 setCompletedTasks(jsonResponse.result)
-                //calculation for mood 
-                let moodLevelCalc = 50;
-                let moodPointsCalc = 0;
-                let moodCheckPoint = 0; //better to update here and use to check against as useState takes time to render
-                for (const result of jsonResponse.result) {
-                    if (result.mood == 0 && result.wellnessCheckpoint !== 0) { //happy & wellness
-                        moodLevelCalc += 20; //positive change in mood level
-                        moodPointsCalc += 0
-                    } else if (result.mood == 0) { //happy
-                        moodLevelCalc += 10; //positive change in mood level
-                        moodPointsCalc += 2
-                    } else if (result.mood == 1) { //neutral
-                        moodLevelCalc += 0; //no change in mood level
-                        moodPointsCalc += 4
-                    } else { //sad
-                        moodLevelCalc -= 10; //negative change in mood level
-                        moodPointsCalc += 6
-                    }
-                    //check last checkpoint wellness (if any)
-                    if (result.wellnessCheckpoint !== 0) {
-                        if (result.wellnessCheckpoint  >= moodCheckPoint) {
-                            moodCheckPoint = result.wellnessCheckpoint;
-                        }
-                    }
-                }
-                //update state 
-                setMoodLevel(moodLevelCalc);
-                setCurrentMoodPoint(moodPointsCalc);
-                console.log (moodPointsCalc,  moodCheckPoint)
-                //get wellness task if moodcheckpoint > 10 from current point calc
-                if (moodPointsCalc - moodCheckPoint > 10) {
-                    fetchWellnessActivities();
-                } else {
-                    fadeOut();
-                    setWellnessTasks([])
-                }
+                //calculation for mood - if wellness task needs to be fetched
+                calculateMood(jsonResponse, setMoodLevel, setCurrentMoodPoint, fetchWellnessActivities, fadeOut, setWellnessTasks)
             }
         })
         .catch((err) => {
@@ -576,7 +543,7 @@ export default function DayTasksScreen({ navigation: { navigate }, route }){
                                                         onPress: () => {
                                                             toggleWellnessTask();
                                                         },
-                                                        title: resp.title
+                                                        title: resp.title,
                                                     }}
                                                 />
                                             </Animated.View> :
@@ -627,6 +594,9 @@ export default function DayTasksScreen({ navigation: { navigate }, route }){
                                             props={{
                                                 activity: resp.task_title,
                                                 mood: resp.mood,
+                                                time:  resp.start_time.substring(0, resp.start_time.length - 3) +
+                                                    " - " +
+                                                    resp.end_time.substring(0, resp.start_time.length - 3)
                                             }}
                                         />
                                     ))}

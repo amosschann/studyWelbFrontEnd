@@ -10,6 +10,12 @@ export async function getAccessToken() {
   }
 }
 
+/**
+ * validate access token by sending a get request and validating respose
+ * 
+ * @function
+ * @param {string} accessToken - token string
+ */
 export function fetchValidTokenCheck(accessToken) {
   return new Promise(async (resolve) => {
     try {

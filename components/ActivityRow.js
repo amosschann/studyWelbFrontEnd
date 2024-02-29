@@ -139,8 +139,11 @@ export function AcitivityWellnessRowComplete ({props}) {
                     {CheckBoxMood(props.mood)}
                 </View>
                 {/* Activity */}
-                <View style={[styles.flex8 ,styles.justifyHorizontalStart, styles.justifyVerticalCenter]}>
+                <View style={[styles.flex5 ,styles.justifyHorizontalStart, styles.justifyVerticalCenter]}>
                     <Text style={[styles.text15, styles.paddingLeft10, styles.fontBold]}>{props.activity}</Text>
+                </View>
+                <View style={[styles.flex3, styles.justifyHorizontalStart, styles.justifyVerticalCenter]}>
+                    <Text style={[styles.text15, styles.paddingLeft10, styles.fontBold]}>{props.time}</Text>
                 </View>
             </View>
         </View>
