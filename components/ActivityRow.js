@@ -36,6 +36,36 @@ export function ActivityRowStatic ({props}) {
     )
 };
 
+/**
+ * Activity Row Component - no touch function (Half height)
+ * 
+ * @component
+ * @param {object} props - Component props
+ * @param {string} props.activity - The name of the activity
+ * @param {string} props.time - The time of the activity
+ * @param {function} props.onPress - The onPress action for the whole row
+ * @param {boolean} props.isCompleted - Indicates if the activity is completed
+ */
+export function ActivityRowStaticHalf ({props}) {
+    if (props.isCompleted) {
+
+    }
+    return (
+        <View style={[styles.flex1, styles.rowFlex, styles.marginTop5, styles.backgroundLightBlue, {height: height/ 18}]}>
+            {/* Activity */}
+            <View style={[styles.flex1]}/>
+            <View style={[styles.flex5 ,styles.justifyHorizontalStart, styles.justifyVerticalCenter]}>
+                <Text style={[styles.text15, styles.fontBold]}>{props.activity}</Text>
+            </View>
+            <View style={[styles.flex1]}/>
+            {/* Time */}
+            <View style={[styles.flex3, styles.justifyHorizontalStart, styles.justifyVerticalCenter]}>
+                <Text style={[styles.text15, styles.fontBold]}>{props.time}</Text>
+            </View>
+        </View>
+    )
+};
+
 /** 
  * activity row not checked - with touch functions
  * @component

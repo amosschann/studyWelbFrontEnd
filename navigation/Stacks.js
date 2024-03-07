@@ -9,8 +9,7 @@ import AddTasksScreen from '../screens/AddTasksScreen';
 import ManageTasksScreen from '../screens/ManageTasksScreen';
 import JournalScreen from '../screens/JournalScreen';
 import ManageJournalScreen from '../screens/ManageJournalScreen';
-import ManageWellnessScreen from '../screens/ManageWellnessScreen';
-
+import WellnessStasticScreen from '../screens/WellnessStatisticsScreen';
 
 //**Main Stacks with Navigator */
 export function SignInStackScreen() {
@@ -77,6 +76,7 @@ export function WellnessStackScreen() {
           }}
         />
         {manageWellnessStackScreen()}
+        {wellnessStatisticsStackScreen()}
         </WellnessStack.Navigator>
   );
 }
@@ -170,9 +170,22 @@ export function manageWellnessStackScreen() {
   return(
         <manageWellnessStack.Screen 
           name="ManageWellnessScreen" 
-          component={ManageWellnessScreen}
+          component={WellnessScreen}
           options={{ 
             title: 'Manage Wellness' 
+          }}
+        />
+  );
+}
+
+export function wellnessStatisticsStackScreen() {
+  const wellnessStatisticsStack = createNativeStackNavigator();
+  return(
+        <wellnessStatisticsStack.Screen 
+          name="WellnessStatisticsScreen" 
+          component={WellnessStasticScreen}
+          options={{ 
+            title: 'Statistics' 
           }}
         />
   );

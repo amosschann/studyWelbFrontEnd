@@ -8,7 +8,7 @@ const AnimatedPath = Animated.createAnimatedComponent(Path);
 const AnimatedG = Animated.createAnimatedComponent(G)
 
 /** compoenent for Mood Meter 
- * torn down and repurposed from - https://github.com/bartgryszko/react-native-circular-progress/blob/master/src/AnimatedCircularProgress.js
+ * torn down and repurposed from - https://github.com/bartgryszko/react-native-circular-progress/blob/master/src/CircularProgress.js
  * removed unneccessary props / variables / components
  * new 4 parts of ellipse 
  * new needle 

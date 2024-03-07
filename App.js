@@ -30,7 +30,7 @@ function MainApp() {
     return (
       <NavigationContainer>
         <Tab.Navigator
-          initialRouteName="Home" // Change this if you want to start with a different screen
+          initialRouteName="Home" 
           screenOptions={({ route }) => ({
             tabBarIcon: ({ focused, color, size }) => {
               let iconName;

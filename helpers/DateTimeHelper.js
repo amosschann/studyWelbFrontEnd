@@ -14,6 +14,19 @@ export function localiseAndFormatDBDate(inputDateStr) {
 }
 
 /**
+ * convert timestamp to yyyy-MM-dd format
+ * 
+ * @function
+ * @param {string} timestamp - datetime string in ISO format
+ * @returns {string} - formatted date string in yyyy-MM-dd format
+ */
+export function formatTimestampToDate(timestamp) {
+    const date = new Date(timestamp);
+    const formattedDate = date.toISOString().split('T')[0];
+    return formattedDate;
+}
+
+/**
  * converts datestring to format that can be saved in db
  * 
  * @function
@@ -35,7 +48,6 @@ export function convertDateTimeToDBTimeFormat(inputDateStr) {
 
 //formats the time for date time picker (android)
 export function formatTime(time) {
-    console.log(time)
     const hour = ('0' + time.getHours()).slice(-2);
     const minute = ('0' + time.getMinutes()).slice(-2);
     return `${hour}:${minute}`;

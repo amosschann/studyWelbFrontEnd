@@ -8,6 +8,9 @@ import { WellnessRow } from '../components/WellnessRow';
 import Modal from "react-native-modal";
 import { useNavigationState } from '@react-navigation/native';
 const { height, width } = Dimensions.get('screen');
+import RNDateTimePicker from '@react-native-community/datetimepicker';
+import { formatTime, formatTimestampToDate } from '../helpers/DateTimeHelper';
+
 
 export default function WellnessScreen({ navigation: { navigate }, props }){
     const pageIndex = useNavigationState(state => state.index);
@@ -21,6 +24,9 @@ export default function WellnessScreen({ navigation: { navigate }, props }){
     ])
     const [moreOptionsVisible, setMoreOptionsVisible] = useState(false);
     const [currentlySelectedIndex, setCurrentlySelectedIndex] = useState('');
+    const [statisticDate, setStatisticDate] = useState(new Date());
+    const [showDTP1, setShowDTP1] = useState(false);
+    const [rerenderDateTimePicker, setRerenderDateTimePicker] = useState(new Date());
 
     useEffect(() => {
         // initial load from login
@@ -183,14 +189,38 @@ export default function WellnessScreen({ navigation: { navigate }, props }){
                         ))
                     }
                     
-                    <View style={[styles.flex6, styles.paddingLeftRight10, styles.backgroundBlue]}>
-                            <View style={[styles.flex1, styles.justifyVerticalCenter, styles.paddingAll10]}>
-                                <Text style={[styles.text20, styles.textAlignCenter, styles.colourWhite, styles.fontBold]}>Wellness Statistics</Text>
+                    <View style={[styles.flex4, styles.columnFlex, styles.paddingLeftRight10, styles.backgroundBlue]}>
+                            <View style={[styles.flex3, styles.rowFlex, styles.backgroundWhite, styles.borderRadius10]}>
+                                <View style={[styles.flex1, styles.columnFlex]}/>
+                                    <View style={[styles.flex2, styles.justifyVerticalCenter, styles.justifyHorizontalCenter]}>
+                                        <Text style={[styles.text20, styles.textAlignLeft]}>Select Week </Text>
+                                    </View>
+                                    <View style={[styles.flex1, styles.justifyVerticalCenter]}>
+                                        {Platform.OS === "ios"? 
+                                            <RNDateTimePicker key={rerenderDateTimePicker} mode="date" value={statisticDate} maximumDate={new Date()} onChange={(event, date) => {
+                                                setStatisticDate(date);
+                                                setRerenderDateTimePicker(Date()); //handles rerendering of component to close the calendar ui on date selection
+                                                }
+                                            }/>
+                                        :
+                                            <TouchableOpacity style={[styles.flex1, styles.rowFlex]} onPress={()=> {setShowDTP1(true)}}>
+                                                <View style={[styles.flex1, styles.justifyHorizontalCenter, styles.justifyVerticalCenter, styles.textAlignCenter, styles.marginBottomTop5]}>
+                                                    {
+                                                        showDTP1 && 
+                                                        <RNDateTimePicker mode="date" value={statisticDate} maximumDate={new Date()} onChange={(event, date) => {
+                                                                setStatisticDate(date); 
+                                                                setShowDTP1(false)
+                                                            }}
+                                                        /> 
+                                                    }
+                                                    <Text style={[styles.text20]}>{formatTime(statisticDate)}</Text>
+                                                </View>
+                                            </TouchableOpacity>
+                                        }
+                                    </View>
+                                <View style={[styles.flex1]}/>
                             </View>
-                            <View style={[styles.flex1, styles.paddingLeftRight10, styles.backgroundWhite, styles.borderRadius10, styles.justifyVerticalCenter, styles.justifyHorizontalCenter]}>
-                                <Text style={[styles.text15, styles.textAlignCenter]}>choose date placeholder</Text>
-                            </View>
-                    </View>
+                        </View>
 
                     <View style={[styles.flex1, styles.backgroundBlue]} />
 
@@ -198,7 +228,7 @@ export default function WellnessScreen({ navigation: { navigate }, props }){
                         <SubmitButton
                             props={{
                                 text: 'View Statistics', 
-                                onPress: () => console.log('test')
+                                onPress: () => navigate('WellnessStatisticsScreen', {'selectedDate': formatTimestampToDate(statisticDate)}) 
                             }}
                         />
                     </View>

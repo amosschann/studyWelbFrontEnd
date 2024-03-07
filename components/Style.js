@@ -52,6 +52,9 @@ const styles = StyleSheet.create({
     flex10: {
       flex: 10
     },
+    flex15: {
+      flex: 15
+    },
     //widths
     width: {
       width: width
