@@ -17,7 +17,7 @@ export default function SignInScreen ({ navigation: { navigate }, props }){
 
     function submitSignIn() {
         let url = process.env.EXPO_PUBLIC_API_URL + 'api/auth/signIn'; 
-
+        
         //empty check
         if (
             email === '' ||

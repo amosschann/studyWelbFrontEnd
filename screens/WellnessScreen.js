@@ -73,7 +73,7 @@ export default function WellnessScreen({ navigation: { navigate }, props }){
                 return response.json();
             } else {
                 Alert.alert('unkown error occurred');
-                console.log(response)
+                console.log(JSON.stringify(response));
             }
         })
         .then(async (jsonResponse) => {
@@ -160,6 +160,9 @@ export default function WellnessScreen({ navigation: { navigate }, props }){
     }
     
 
+    let androidDateTimeSelectedProcessed = statisticDate.toLocaleDateString();
+    androidDateTimeSelectedProcessed = androidDateTimeSelectedProcessed.slice(0, 4) + androidDateTimeSelectedProcessed.slice(6, 8);
+
     return (
         <SafeAreaView style={styles.container} >
             <KeyboardAvoidingView
@@ -213,7 +216,7 @@ export default function WellnessScreen({ navigation: { navigate }, props }){
                                                             }}
                                                         /> 
                                                     }
-                                                    <Text style={[styles.text20]}>{formatTime(statisticDate)}</Text>
+                                                    <Text style={[styles.text20]}>{androidDateTimeSelectedProcessed}</Text>
                                                 </View>
                                             </TouchableOpacity>
                                         }

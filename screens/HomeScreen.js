@@ -156,6 +156,7 @@ export default function HomeScreen({ navigation: { navigate }, props }){
         searchParams = new URLSearchParams(data).toString();
 
         let url = process.env.EXPO_PUBLIC_API_URL + 'api/taskDays/get-user-taskdays?' + searchParams; 
+
         fetch(url, {
             method: 'GET',
             mode: 'cors',
@@ -174,7 +175,7 @@ export default function HomeScreen({ navigation: { navigate }, props }){
                 return response.json();
             } else {
                 Alert.alert('unkown error occurred');
-                console.log(response)
+                console.log(JSON.stringify(response))
             }
         })
         .then((jsonResponse) => {

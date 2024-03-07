@@ -551,7 +551,7 @@ export default function DayTasksScreen({ navigation: { navigate }, route }){
                                     ))}
                                     {toDoTasks.map((resp, index) => (
                                         <ActivityRowNotChecked
-                                            key={'activityrow' + index}
+                                            key={'activityrowDayTask' + index}
                                             props={{
                                                 onPress: () => {
                                                     toggleMoreOptionsToDo();
@@ -603,7 +603,7 @@ export default function DayTasksScreen({ navigation: { navigate }, route }){
                                 </React.Fragment>
                             ) : (
                                 <ActivityRowStatic
-                                    key={'noactivityrow'}
+                                    key={'noactivityrowDayTask'}
                                     props={{
                                         onPress: () => console.log('hello'),
                                         activity: 'no tasks for the day',

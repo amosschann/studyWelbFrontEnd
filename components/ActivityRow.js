@@ -17,9 +17,6 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
  * @param {boolean} props.isCompleted - Indicates if the activity is completed
  */
 export function ActivityRowStatic ({props}) {
-    if (props.isCompleted) {
-
-    }
     return (
         <View style={[styles.flex1, styles.rowFlex, styles.marginTop5, styles.backgroundLightBlue, {height: height/ 9}]}>
             {/* Activity */}
@@ -47,9 +44,6 @@ export function ActivityRowStatic ({props}) {
  * @param {boolean} props.isCompleted - Indicates if the activity is completed
  */
 export function ActivityRowStaticHalf ({props}) {
-    if (props.isCompleted) {
-
-    }
     return (
         <View style={[styles.flex1, styles.rowFlex, styles.marginTop5, styles.backgroundLightBlue, {height: height/ 18}]}>
             {/* Activity */}
