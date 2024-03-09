@@ -10,6 +10,7 @@ import ManageTasksScreen from '../screens/ManageTasksScreen';
 import JournalScreen from '../screens/JournalScreen';
 import ManageJournalScreen from '../screens/ManageJournalScreen';
 import WellnessStasticScreen from '../screens/WellnessStatisticsScreen';
+import ManageWellnessScreen from '../screens/ManageWellnessScreen';
 
 //**Main Stacks with Navigator */
 export function SignInStackScreen() {
@@ -170,7 +171,7 @@ export function manageWellnessStackScreen() {
   return(
         <manageWellnessStack.Screen 
           name="ManageWellnessScreen" 
-          component={WellnessScreen}
+          component={ManageWellnessScreen}
           options={{ 
             title: 'Manage Wellness' 
           }}
